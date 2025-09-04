@@ -128,3 +128,154 @@ let mensaje2;
 mensaje2 = (temperatura > 25) ? "Hace calor" : "Hace frio";
 console.log(mensaje2);
 
+
+/*
+/////////////////////////////////////
+// Bucles: for, while, do...while //
+
+Sintaxis for:
+
+for (inicializacion; condicion; incremento) {
+    // Codigo a ejecutarse en cada iteracion (cada vuelta de bucle)
+}
+
+
+Sintaxis while:
+while(condicion) {
+    // Codigo a ejecutarse mientras la condicion sea verdadera
+}
+
+Sintaxis do...while
+do {
+    // Codigo a ejecutar
+} while (condicion)
+*/
+
+
+// Bucle for
+for(let i = 0; i < 5; i++) {
+    console.log(`Iteracion: ${i}`); // Sintaxis template literals `texto ${variables}`
+}
+
+// Bucle for anidado
+for(let i = 0; i < 3; i++) {
+
+    for(let j = 0; j < 3; j++) {
+        console.log(`${i} - ${j}`);
+    }
+   
+}
+
+// Bucle while
+let i = 0;
+while(i < 5) {
+    console.log(`Iteracion: ${i}`);
+    i++;
+}
+
+
+// Bucle do while
+let y = 0;
+do {
+    console.log(`Iteracion: ${y}`);
+    y++;
+} while(y < 5);
+
+
+/* Control de flujo avanzado: break y continue
+
+- break:      Se usa para salir inmediatamente de un bucle o una estructura de control
+- continue:   La instruccion continue salta a la siguiente iteracion, omitiendo el codigo restante del bucle para esa iteracion
+*/
+
+// Ejemplo co continue
+for(let i = 0; i < 10; i++) {
+    if(i === 5) {
+        break; // Salimos del bucle cuando i es 5
+    }
+    console.log(`Iteracion for2: ${i}`);
+    
+}
+
+
+// Ejemplo con continue
+for(let i = 0; i < 10; i++) {
+    if (i % 2 === 0) {
+        continue;
+    }
+    console.log(`Numero impar: ${i}`);
+    
+}
+
+
+/*  Estructura de control Switch
+
+Permite evaluar una expresion y ejecutar el bloque de codigo correspondiente al caso que coincide
+
+switch (expresion) {
+    case valor1:
+        // Codigo que se ejecuta si la expresion es igual a valor1
+        break;
+
+    case valor2:
+        // Codigo que se ejecuta si la expresion es igual a valor2
+        break;
+
+    case valor3:
+        // Codigo que se ejecuta si la expresion es igual a valor3
+        break;
+
+    default:
+        // Codigo que se ejecuta si ninguno de los casos coincide
+}
+*/
+
+// Ejemplo switch
+
+/* Ejemplos para recibir input del usuario a traves de una ventana flotante
+
+alert("Holis");
+
+// Aca recibimos una respuesta booleana del usuario
+
+let teGustaJS = confirm("Che, que onda JavaScript, te gusta?");
+console.log(teGustaJS); // true
+
+let inputUsuarioStr = prompt("Introduci dia de la semana");
+console.log(typeof inputUsuarioStr);
+
+let inputUsuarioNum = parseInt(prompt("Dia de la semana"));
+console.log(typeof inputUsuarioNum);
+*/
+
+
+let diaSemana = parseInt(prompt("Introduci dia de la semana"));
+
+// Verificar que dia de la semana es
+switch (diaSemana) {
+
+    case 1:
+        console.log("Lunes");
+        break;
+
+    case 2:
+        console.log("Martes");
+        break;
+
+
+    case 3:
+        console.log("Miercoles");
+        break;
+
+    case 4:
+        console.log("Jueves");
+        break;
+
+
+    case 5:
+        console.log("Viernes");
+        break;
+
+    default:
+        console.log("Fin de semana");
+}
