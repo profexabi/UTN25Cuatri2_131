@@ -1,0 +1,10 @@
+:root {
+    --gris-fondo: #1d2a35;
+    --blanco-fuente: #dddddd;
+}
+
+body {
+    background-color: var(--gris-fondo);
+    color: var(--blanco-fuente);
+    font-family: monospace;
+}

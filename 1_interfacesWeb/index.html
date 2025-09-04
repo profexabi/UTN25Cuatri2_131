@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /* ====================
+            Paleta colores
+        ======================*/
+        :root {
+            /* Botones */
+            --verde-boton: #04AA6D;
+            --azul-boton: #008CBA;
+            --rojo-boton: #f44336;
+            --gris-boton: #e7e7e7;
+            --negro-boton: #555555;
+
+            --azul-apple: #0071e3;
+
+            /* Degradados */
+            --azul-degradado: #b1def1;
+            --gris-degradado: #f3f7f8;
+        }
+
+        /* ====================
+            Estilos genericos
+        ======================*/
+        ul { padding-left: 0; }
+        li { list-style-type: none; }
+
+        body { 
+            margin: 0;
+            font-family: monospace;
+        }
+
+
+
+        /* ====================
+            Header
+        ======================*/
+        /* TODO borrar guias bordes
+        header, nav, ul, li, section, div {
+            border: 1px solid;
+        }
+        */
+
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header nav {
+            width: 60%;
+        }
+
+        .header-lista {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .header-logo {
+            display: flex;
+        }
+
+        .header-logo_img {
+            width: 25px;
+        }
+
+        .boton {
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        #boton-verde {
+            background-color: var(--verde-boton);
+        }
+
+        #boton-azul {
+            background-color: var(--azul-boton);
+        }
+
+        #boton-rojo {
+            background-color: var(--rojo-boton);
+        }
+
+        #boton-gris {
+            background-color: var(--gris-boton);
+            color: black;
+        }
+
+        #boton-negro {
+            background-color: var(--negro-boton);
+        }
+
+
+        /* ====================
+            Section
+        ======================*/
+        .portada, .portada-info, .portada-img {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .portada-entera,  .portada-der {
+            background: #B1DEF1;
+            background: linear-gradient(166deg, rgba(177, 222, 241, 1) 0%, rgba(243, 247, 248, 1) 100%);
+        }
+
+        .portada-img_texto {
+            text-align: center;
+        }
+
+        .portada-boton {
+            color: white;
+            background-color: var(--azul-apple);
+            padding: 10px 20px;
+        }
+
+        .portada-foto {
+            width: 400px;
+        }
+
+        .portada-multiple {
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .portada-izq {
+            background-color: var(--negro-boton);
+            color: white;
+        }
+
+        .portada-izq, .portada-der {
+            flex: 1;
+        }
+        
+
+
+        /* ====================
+            Media Queries
+        ======================*/
+        @media (max-width: 1200px) {
+            header {
+                justify-content: space-evenly;
+            }
+            header nav {
+                width: 90%;
+            }
+        }
+
+        @media (max-width: 950px) {
+            .portada-multiple {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 650px) {
+            header, .header-lista {
+                flex-direction: column;
+            }
+
+            header nav {
+                width: 25%;
+                text-align: center;
+            } 
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-logo">
+            <img class="header-logo_img" src="https://imgs.search.brave.com/SSjIqR18d8OFc2jGLWTuM3eiucStid2YaIm9UaEHkqA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDIv/ODU2Lzg0MC9zbWFs/bC9wZW5ndWluLWds/eXBoLWludmVydGVk/LWljb24tdmVjdG9y/LmpwZw" alt="Icono pinguino">
+        </div>
+        <nav>
+            <ul class="header-lista">
+                <li class="boton" id="boton-verde">Verde</li>
+                <li class="boton" id="boton-azul">Azul</li>
+                <li class="boton" id="boton-rojo">Rojo</li>
+                <li class="boton" id="boton-gris">Gris</li>
+                <li class="boton" id="boton-negro">Negro</li>
+            </ul>
+        </nav>
+        <div class="header-logo">
+            <img class="header-logo_img" src="https://imgs.search.brave.com/SSjIqR18d8OFc2jGLWTuM3eiucStid2YaIm9UaEHkqA/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wNDIv/ODU2Lzg0MC9zbWFs/bC9wZW5ndWluLWds/eXBoLWludmVydGVk/LWljb24tdmVjdG9y/LmpwZw" alt="Icono pinguino">
+        </div>
+    </header>
+
+
+    <main>
+
+        <section class="portada portada-entera">
+
+            <div class="portada-info">
+                <h2>MacBook Air</h2>
+                <p>Nuevo color azul cielo.</p>
+                <p>Rendimiento por las nubes con el chip M4.</p>
+                <p class="portada-boton">Más información</p>
+            </div>
+
+            <div class="portada-img">
+                <div class="portada-img_foto">
+                    <img class="portada-foto" src="laptop-transparent-image-21-removebg-preview.png" alt="laptop">
+                </div>
+
+                <div class="portada-img_texto">
+                    <p>Diseñada para Apple Inteligence</p>
+                    <p>Apple Inteligence ya está disponible en español</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="portada-multiple">
+
+            <div class="portada-izq">
+                <div class="portada-info">
+                    <h2>MacBook Air</h2>
+                    <p>Nuevo color azul cielo.</p>
+                    <p>Rendimiento por las nubes con el chip M4.</p>
+                    <p class="portada-boton">Más información</p>
+                </div>
+    
+                <div class="portada-img">
+                    <div class="portada-img_foto">
+                        <img class="portada-foto" src="laptop-transparent-image-21-removebg-preview.png" alt="laptop">
+                    </div>
+    
+                    <div class="portada-img_texto">
+                        <p>Diseñada para Apple Inteligence</p>
+                        <p>Apple Inteligence ya está disponible en español</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="portada-der">
+                <div class="portada-info">
+                    <h2>MacBook Air</h2>
+                    <p>Nuevo color azul cielo.</p>
+                    <p>Rendimiento por las nubes con el chip M4.</p>
+                    <p class="portada-boton">Más información</p>
+                </div>
+    
+                <div class="portada-img">
+                    <div class="portada-img_foto">
+                        <img class="portada-foto" src="laptop-transparent-image-21-removebg-preview.png" alt="laptop">
+                    </div>
+    
+                    <div class="portada-img_texto">
+                        <p>Diseñada para Apple Inteligence</p>
+                        <p>Apple Inteligence ya está disponible en español</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</body>
+</html>
