@@ -6,6 +6,9 @@
 
 ## JavaScript III / Scope y ambito, funciones, tipos de funciones, parametros y argumentos, funciones flecha
 
+#### [Ultimo onlinegdb](https://www.onlinegdb.com/0ajvjTpR-)
+#### [Maqueta portfolio dev fullstack](https://drive.google.com/file/d/1eEUI11JSTHKB5SOXSwAkkRUiEhJt36rr/view)
+
 ```js
 /* ==========================
      Scope o Ambito
@@ -447,6 +450,9 @@ console.log(saludarPersona("Nahuel"));
 ---
 
 ## JavaScript II / Control de flujo, estructuras de control, condicionales y bucles I
+
+#### [CV a maquetar](https://imgur.com/a/O5ykCAc)
+
 ```js
 /*  Introduccion al control de flujo
 
@@ -860,4 +866,3 @@ console.log(numero2);
 ---
 
 ## JavaScript IV / Introduccion a arrays. Metodos de strings y arrays
-
