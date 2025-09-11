@@ -1,435 +1,282 @@
-/* ==========================
-     Scope o Ambito
-=============================
+/* =============================
+     Introduccion a arrays
+================================
 
-El scope o ambito en JavaScript se refiere al contexto en el cual las variables y las funciones son accesibles y pueden ser referenciadas.
-*/
+- Un array es una lista ORDENADA de elementos, donde cada uno tiene una posicion o indice (index)
 
-///////////////////////////////////
-// Global Scope o Ambito Global //
+- Los arrays en JavaScript pueden contener cualquier tipo de dato (numeros, strings, booleanos, otros arrays, objetos, funciones, etc)
 
-// Las variables declaradas fuera de cualquier funcion o bloque tienen alcance global y son accesibles desde cualquier parte del codigo
+- Usaremos arrays cuando necesitemos almacenar una lista ordenada de elmentos (como una lista de nombre)
 
-var globalVar = "Soy global";
 
-function mostrarGlobal() {
-    console.log(globalVar);
-}
 
-mostrarGlobal();
-console.log(globalVar);
+=================================
+    Introduccion a objetos
+=================================
 
+- Un objeto en JavaScript es una coleccion de pares clave-valor. as claves son strings que identifican cada valor, lo que nos permite un acceso rapido y estructurado a los datos
+
+- Los objetos son utiles cuando queremos representar una entidad con multiples propiedades
+
+- Accedemos a las propiedades de un objeto a traves de notacion de punto y notacion de corchetes
+
+- Los objetos tambien pueden tener metodos, que son funciones almacenadas en una propiedad
+
+- Usaremos objetos cuando tenemos datos estructurados que puedne agruparse en propiedades clave-valor
 
 
 /////////////////////////////////////////
-// Local Scope o Ambito local-funcion //
+// Comparacion entre Arrays y Objetos //
 
-// Las variables declaradas DENTRO de una funcion solo son accesibles dentro de esa funcion y tienen un ambito local
-function mostrarLocal() {
-    var localVar = "Soy local";
-    console.log(localVar);
-}
+Uso principal: 
+    Array: Lista ordenada de elementos     
+    Objeto: Colecciond e pares clave-valor
 
-mostrarLocal();
-// console.log(localVar); // Uncaught ReferenceError: localVar is not defined
+Acceso a datos:
+    Array: Por indice (array[0])
+    Objeto: Notacion de punto o de corchete (objeto.clave / objeto["clave"])
 
+Metodos:
+    Array: .push(), .pop(), .map(), .forEach()
+    Objeto: Metodos personalizados y funciones
 
-
-/////////////////////////////////////
-// Block Scope o Ambito de bloque //
-
-// A partir de ES6, las variables declaradas con let y const tienen alcance de bloque, lo que significa que SOLO SON ACCESIBLES dentro del bloque que se declararon: { }, if {}, for, etc
-
-if(true) {
-    let bloqueLet = "Soy de bloque";
-    console.log(bloqueLet);
-}
-
-// console.log(bloqueLet);
-
-
-
-/////////////////////////////////////
-// Scope Chain o Cadena de Ambito //
-
-// Cuando se intentna acceder a una variable, JavaScript busca en la "cadena de ambito", comenzando por el ambito mas interno y moviendose hacia los ambitos mas externos hasta encontrar la variable o llegar al ambito global
-
-var globalVar2 = "Soy global 2";
-
-function externa() {
-    var externaVar2 = "Soy de externa 2";
-
-    function interna() {
-        var internaVar2 = "Soy de interna 2";
-        console.log(globalVar2);
-        console.log(externaVar2);
-        console.log(internaVar2);
-    }
-
-    interna();
-    console.log(internaVar2);
-}
-
-// externa();
-
-
-
-/* ==================================================================
-Function Scope (Ambito de funcion) vs Block Scope (Ambito de bloque)
-=====================================================================
-
-- Function Scope: Las variables declaradas con var tienen ambito de funcion. Por lo que si se declaran dentro de una funcion, no son accesibles fuera de esa funcion, PERO NO ESTAN LIMITADAS POR BLOQUES
-
-- Block Scope: Las variables declaradas con let y const ESTAN LIMITADAS POR EL BLOQUE en el que se declaran -> {}
+Iteracion:
+    Array: .forEach(), .map(), bucles, etc
+    Objeto: for...in, Object.keys(), Object.values()
 */
 
-// Funcion Scope
-function scopeFuncion() {
-    if(true) {
-        var funcionVar = "Soy de funcion";
-    }
-    console.log(funcionVar);
-}
+// Arrays
+let frutas = ["manzana", "banana", "naranja"];
 
-scopeFuncion();
+console.log(frutas[0]); 
+console.log(frutas[2]);
 
 
-// Block Scope
-function scopeBloque() {
-    if(true) {
-        let bloqueLet = "Soy de bloque";
-        const bloqueConst = "Soy de bloque tambien";
-    }
+// Objetos
+let persona = { // Similar a los diccionarios en Python
+    nombre: "Kevin",
+    edad: 23,
+    ciudad: "Buenos Aires",
 
-    console.log(bloqueLet); // Uncaught ReferenceError: bloqueLet is not defined
-    console.log(bloqueConst); // // Uncaught ReferenceError: bloqueConst is not defined
-}
-
-// scopeBloque();
-
-
-
-
-/* =======================
-    Hoisting (Elevacion)
-==========================
-
-Las declaraciones de variables y funciones en JavaScript se "mueven hacia arriba" de su contexto de ejecucion (scope). Solo las declaraciones son eelvadas, no las inicializaciones.
-
-- Variables con var: Se elevan y se inicializan con undefined
-
-- Variables con let y const: Se elevan pero no se inicializan, lo que lleva a un error si se accede antes de la declaracion
-*/
-
-console.log(elevadaVar); // undefined
-var elevadaVar = "Soy una var elevada";
-console.log(elevadaVar);
-
-
-// console.log(elevadaLet); // Uncaught ReferenceError: Cannot access 'elevadaLet' before initialization
-let elevadaLet = "Soy una let elevada";
-console.log(elevadaLet);
-
-
-
-
-/* =========================================
-    Diferencias entre var, let y const
-============================================
-
-- var: Tiene ambito de funcion, lo que significa que se declara dentro de la funcion actual y esta disponible en todo momento. Tambien permite la redeclaracion y la reasignacion
-    
-    - De ambito global o de ambito de funcion
-    - Puede ser declarado y reasignado
-    - Tiene elevacion a nivel de funcion, por lo que puede utilizarse antes de la declaracion.
-
-
-- let: Tiene ambito de bloque, por lo que si se declara dentro de un bloque (if, bucle, function) solo esta disponible dentro de ese bloque. Tambien permite la redeclaracion pero no la reasignacion
-
-    - De ambito de bloque (dentro de un bucle, sentencia condicional o funcion)
-    - Se pueden volver a declarar pero no reasignar
-    - Tiene elevacion a nivel de bloque, por lo que no es accesible antes de la declaracion
-
-
-- const: Tambien tiene ambito de bloque, pero a diferencia de let, prohibe la reasignacion y la redeclaracion
-
-    - De ambito de bloque (dentro de un bucle, sentencia condicional o funcion)
-    - No se puede volver a declarar ni reasignar
-    - Tiene elevacion a nivel de bloque, por lo que no es accesible antes de la declaracion
-
-
-
-============================================
-    Diferencias clave let y const
-============================================
-
-let y const se introdujeron en ES6 para mejorar el ambito de las variables y reducir la probabilidad de anulaciones accidentales de variables. Tanto let como const NO permite la elevacion, ademas const asegura que el valor de la variable permanece inmutable mientras que let permite la reasignacion.
-
-
-
-============================================
-    Buenas practicas
-============================================
-Usar const para variables de solo lectura, como constantes u objetos inmutables.
-Utilizar let para variables que puedan cambiar con el tiempo
-Evitar usar var debidoa  su ambito global o de funcion, que puede dar lugar a conflictos y bugs
-*/
-
-// Usamos const para variables de solo lectura
-const PI = 3.14;
-
-// Usamos let para variables que podrian cambiar
-let contador = 0;
-contador++;
-console.log(contador);
-
-
-
-
-/* =======================
-    Funciones
-==========================
-
-- Una funcion es un bloque de codigo reutilizable que se puede ejecutar cuando se llama por su nombre
-- Son funddamentales para la modularidad y la reutilizacion del codigo
-
-function nombreFuncion() {
-    // Bloque de codigo que se ejecutara cuando se llame a la funcion
-}
-
-
-Funciones con parametros: Podemos definir variables en las funciones que acepten valores cuando se les llama
-
-- Los parametros son los nombres de las variables que definimos en la declaracion de la funcion
-- Los argumentos son los valores que le pasamos a la funcion cuando la llamamos
-*/
-
-// Funcion sin parametros
-function sumarCincoYTres() {
-    let resultado = 5 + 3;
-    console.log(`El resultado es: ${resultado}`);
-}
-
-sumarCincoYTres();
-
-
-// Funcion con parametros
-function sumar(a, b) {
-    let resultado = a + b;
-    console.log(`El resultado es: ${resultado}`);
-}
-
-sumar(5, 6);
-
-
-// Funciones que devuelven un valor con la palabra clave return
-function multiplicar(a, b) {
-    return a * b;
-}
-
-console.log(multiplicar(4, 5));
-
-
-function saludar(nombre) { // "nombre" es el parametro
-    console.log(`Hola ${nombre}`);
-}
-
-saludar("Kevin");
-
-
-// Valores predeterminados para los parametros, en caso de que no se pase un argumento
-function despedir(nombre = "maestro") {
-    console.log(`Chau ${nombre}`);
-}
-
-despedir("Thiago");
-despedir();
-
-
-// Multiples argumentos: Las funciones pueden aceptar multiples parametros y los argumentos se pasan EN EL MISMO ORDEN
-function sumarTresNumeros(a, b, c) {
-    return a + b + c;
-}
-
-let suma = sumarTresNumeros(1, 2, 3);
-console.log(suma);
-
-
-/* ==========================
-    Tipos de funciones
-=============================
-
-1. Funcion declarada / Named function o Basic function
-    Es la declaracion basica de JavaScript, usa la keyword function
-
-    Se recomienda para funciones con nombre o cuando se necesite hoisting.
-    Las funciones declaradas con la keyword function se puede elevar a la parte superior de su ambito, esto permite llamar a la funcion antes de ser declarada
-
-
-saludar1();
-
-function saludar1() {
-console.log("Hola mundo desde una funcion declarada");
-}
-
-
-=============================
-
-2. Funcion expresada / Function expression
-    Es la funcion que esta dentro de una variable
-
-    Son utiles para funciones anonimas, para cuando se quiere controlar donde va a estar disponible la funcion o para cuando va a ser usada como argumento para otra funcion
-
-
-const saludar2 = function() {
-    console.log("Hola mundo desde una funcion expresada");
-}
-
-saludar2();
-
-
-=============================
-
-3. Funcion anonima / Anonymous function
-    No tiene nombre y se usan como callbacks generalmente
-
-setTimeout(function() {
-    console.log("Hola mundo desde una funcion anonima");
-}, 1000);
-
-
-=============================
-
-4. Funcion flecha / Arrow function
-    Especialmente util para escribir funciones de una sola linea
-
-const sumar2 = (a, b) => a + b;
-
-console.log(sumar2(1, 2));
-
-
-=============================
-
-5. Funcion de metodos / Method function
-    Son las funciones definidas dentro de un objeto o clase
-
-const persona = {
-    nombre: "Valeria",
-    saludar() {
-        console.log(`Hola me llamo ${this.nombre}`);
+    presentarse: function() { // Metodo de objeto persona
+        console.log("Soy profesor de programacion!")
     }
 }
 
-persona.saludar();
+// Notacion de punto
+console.log(persona.nombre); 
 
+// TO-DO, sin desplegar es copia y desplegando es referencia del objeto?
 
-=============================
+// Notacion de corchetes
+console.log(persona); // La consola del navegador imprime una referencia, no una copia! (al desplegar el objeto en la consola del navegador?)
 
-6. IIFE - Immediately Invoked Function Expression
+console.log({...persona}); // Aca imprimimos una copia del objeto hasta ese momento
+console.log(persona["ciudad"]);
 
-    Las IIFE son funciones que se ejecutan inmediatamente despues de haberse definido
+persona.presentarse(); // Usamos el metodo del objeto
 
-(function() {
-    console.log("Hola mundo desde una IIFE");
-    
-})();
+// Agregamos una propiedad
+persona.lenguaje = "JavaScript";
+// console.log(persona);
 
-*/
+// Modificamos una propiedad
+persona.lenguaje = "Python";
 
-// 1. Funcion declarada
-saludar1();
+// Eliminamos una propiedad
+delete persona.edad;
 
-function saludar1() {
-    console.log("Hola mundo desde una funcion declarada");
-}
-
-
-
-// 2. Funcion expresada
-const saludar2 = function() {
-    console.log("Hola mundo desde una funcion expresada");
-}
-
-saludar2();
-
-
-// 3. Funcion anonima
-setTimeout(function() {
-    console.log("Hola mundo desde una funcion anonima");
-}, 1000);
-
-
-// 4. Funcion flecha
-const sumar2 = (a, b) => a + b;
-
-console.log(sumar2(1, 2));
-
-
-// 5. Funcion de metodos
-const persona = {
-    nombre: "Valeria",
-    saludar() {
-        console.log(`Hola me llamo ${this.nombre}`);
-    }
-}
-
-persona.saludar();
-
-
-// 6. IIFE
-(function() {
-    console.log("Hola mundo desde una IIFE");
-    
-})();
-
-
-console.log("//////////////////////////////////////");
+persona.ciudad = "Mendoza";
+console.log(persona);
 
 
 
 /* ========================
-    Funciones flecha
+    Metodos de strings
 ===========================
 
-- Son una forma mas compacta de escribir funciones, se introdujeron en ES6 y tienen una sintaxis mas concisa
+En JavaScript son todo objetos, salvo los tipos primitivos
+Pero incluso los tipos primitivos (cadenas de caracteres, numeros, etc), JavaScript los trata como si fueran objetos.
 
-const nombreFuncion = (parametros) => {
-    // Bloque de codigo
-}
-
-- Si la funcion tiene un solo parametro, las parentesis son opcionales
-
-- Si la funcion solo devuelve un valor, no es necesario usar la palabra return ni las llaves
-
-- Tienen una sintaxis mas corta y eliminan la necesidad de escribir function y return en muchos casos
+Esto sucede por los object wrappers o envolvedores de objetos. Donde JavaScript envuelve estos tipos de datos y les proporciona metodos para poder manipularlos
 */
 
+// 1. length: nos devuelve la longitud del string
+console.log("Hola".length); 
 
-// Sin parametros
-const saludarFlecha = () => {
-    console.log(`Hola mundo`);
+// Ejemplo object wrapper, iterando un string
+let saludos = "Saludos"; // Cadena de caracteres para iterar
+
+for (let i = 0; i < saludos.length; i++) { // Recorro cada caracter del string como un array
+    console.log(saludos[i]);
+} // Devuelve cada caracter
+
+console.log("///////////////////");
+
+
+//  2. charAt: Devuelve el caracter en la posicion especificada
+console.log(
+    "Hola".charAt(2)
+)
+
+
+// 3. concat: Concatena strings
+console.log("Hola".concat(" ", "mundo"));
+
+
+// 4. includes: Devuelve true si el substring esta en el string
+console.log("JavaScript".includes("Script"));
+
+
+// 5. startsWith: Comprueba si el string comienza con el substring
+console.log("Hola mundo".startsWith("Hola"));
+
+
+// 6. endsWith: Comprueba si el string termina con el substring
+console.log("Hola mundo".endsWith("ndo"));
+
+
+// 7. indexOf: Devuelve el indice de la primera aparicion del substring
+console.log("banana".indexOf("a"));
+
+
+// 8. lastIndexOf: Devuelve la ultima aparicion del substring
+console.log("banana".lastIndexOf("a"));
+
+
+// 9. replace: Reemplaza una parte del string
+console.log("Hola mundo".replace("mundo", "division 132"));
+
+
+// 10. replaceAll: Reemplaza todas las apariciones
+console.log("1,2,3".replaceAll(",", ";"));
+
+
+// 11. toLowerCase: Convierte a minusculas
+console.log("AGUANTE JAVASCRIPT".toLowerCase());
+
+
+// 12. toUpperCase: Convierte a mayusculas
+console.log("holis".toUpperCase());
+
+
+// 13. trim: Elimina espacios en blanco al principio y al final
+console.log("      hola          ".trim());
+
+// 14. trimStart: Elimina espacios al inicio
+console.log("         hola".trimStart());
+
+// 15. trimEnd: Elimina espacios al final
+console.log("hola                 ".trimEnd());
+
+// 16. slice: Extraemos parte del string
+console.log("JavaScript".slice(0, 4));
+console.log("Holis".slice(-3));
+
+// 17. substring: Similar a slice, pero no acepta negativos
+console.log("JavaScript".substring(4, 10));
+
+// substr: Obsoleto, similar a substring
+
+// 18. split: Divide el string en un array
+console.log("rojo,verde,azul".split(","));
+console.log("Hola mundo".split(" "));
+console.log("JavaScript".split(""));
+
+// 19. repeat: Repite el string
+console.log("ji".repeat(3));
+
+// 20. match: Devuelve coincidencias con una expresion regular (REGEX)
+console.log("abce123".match(/[aeiou]/gi)); // Extraemos las vocales
+
+
+
+/* ========================
+    Metodos de arrays
+==========================*/
+// 1. length: devuelve la longitud del array
+console.log([1, 2, 3].length);
+
+let desayuno = ["avena", "pera", "pomelo", "banana", "semillas"];
+
+for (let i = 0; i < desayuno.length; i++) {
+    console.log(desayuno[i]);
 }
 
-saludarFlecha();
+
+// 2. push: Agrega un elemento al final del array
+let arr = [1, 2];
+
+console.log(arr);
+arr.push(3);
+console.log(arr);
 
 
-// Con un solo parametro
-// Con parametros: Si la funcion tiene un solo parametro, las parentesis son opcionales
-const saludarFlecha2 = nombre => {
-    console.log(`Hola ${nombre}`);
-}
-
-saludar("Rocio");
-
-// Con mas de un parametro
-const restar = (a, b) => a - b;
-console.log(restar(5, 3));
+// 3. pop: Elimina el ultimo elemento y lo devuelve
+arr.pop();
+console.log(arr);
 
 
-// Mas de una instruccion en la funcion: Si el cuerpo de la funcion tiene mas de una instruccion, necesitamos {} y usar la keyword return para devolver un valor
-const saludarPersona = nombre => {
-    const saludo = `Hola ${nombre}!`;
-    return saludo;
-}
+// 4. unshift: Agrega un elemento al inicio del array
+arr.unshift(0);
+console.log(arr);
 
-console.log(saludarPersona("Nahuel"));
+
+// 5. shift: elimina el primer elemento y lo devuelve
+console.log(arr.shift()); // lo podemos ver en consola
+console.log(arr);
+
+
+// 6. concat: concatena arrays
+let err = [3, 4]
+let orr = arr.concat(err);
+console.log(arr.concat(err));
+console.log(arr);
+console.log(orr);
+
+
+// 7. join: une los elementos en un string
+console.log(orr.join("-"));
+console.log(orr.join(""));
+console.log(orr.join(" "));
+
+
+// 8. slice: extrae una copia parcial del array
+console.log(orr.slice(1, 3));
+
+
+// 9. splice: modifica el array in situ y permite borrar y agregar
+console.log(orr);
+console.log(orr.splice(1, 0, "dos", "2"));
+console.log(orr);
+
+
+// 10. indexOf, lastIndexOf: primera y ultima posicion del elemento
+orr.push(2);
+console.log(orr.indexOf(2));
+console.log(orr.lastIndexOf(2));
+
+
+// 11. includes: devuelve true si el elemento existe
+console.log(orr.includes(3));
+console.log(orr.includes(5));
+
+
+
+/* =====================
+    EXTRA
+========================
+
+Comparativa de notación con punto frente a notación con corchetes en JavaScript
+
+En JavaScript, la notación con punto (`objeto.propiedad`) y la notación con corchetes (`objeto[“propiedad”]`) son funcionalmente equivalentes para acceder a las propiedades de los objetos, pero difieren en cuanto a rendimiento y casos de uso. La notación con punto suele ser más rápida porque se beneficia de las optimizaciones en tiempo de compilación, lo que permite a los motores JavaScript resolver rápidamente el nombre de la propiedad directamente. Esto se debe a que el motor conoce el nombre exacto de la propiedad en tiempo de compilación, lo que se traduce en tiempos de acceso más rápidos.  
+
+La notación entre corchetes, aunque más versátil, requiere que el motor evalúe la expresión dentro de los corchetes en tiempo de ejecución, lo que introduce una ligera sobrecarga. Esta flexibilidad permite el acceso dinámico a las propiedades, como el uso de variables para los nombres de las propiedades o el acceso a propiedades con caracteres especiales o espacios, que la notación con punto no puede manejar. Por ejemplo, `person[propertyName]`, donde `propertyName` es una variable, o `person[“job-title”]`, con un nombre con guion, requieren la notación entre corchetes.  
+
+
+Históricamente, la diferencia de rendimiento era notable, y las pruebas comparativas mostraban que la notación de puntos era más rápida, por ejemplo, 25 ms frente a 35 ms para 10 millones de iteraciones.  Sin embargo, los motores JavaScript modernos como V8 (utilizado en Chrome y Node.js) han optimizado significativamente ambas notaciones, lo que hace que la diferencia de rendimiento sea insignificante en la mayoría de las aplicaciones.  De hecho, algunas pruebas en las versiones actuales de Chrome muestran que la notación entre corchetes con nombres de propiedades más largos puede ser entre un 4 % y un 6 % más rápida para la lectura de propiedades, aunque las operaciones de escritura tienen un rendimiento similar.
+
+A pesar de estas pequeñas diferencias de rendimiento, la elección entre una notación u otra debe basarse principalmente en la legibilidad, la facilidad de mantenimiento y el caso de uso específico. La notación de puntos es preferible para nombres de propiedades estáticos y conocidos debido a su sintaxis limpia y concisa.  La notación entre corchetes es esencial para el acceso dinámico, como la iteración sobre las propiedades de los objetos con bucles «for...in» o el acceso a propiedades basadas en valores calculados.  Además, la flexibilidad de la notación entre corchetes puede ayudar a los motores JavaScript a optimizar el código para escenarios que implican bucles o acceso basado en variables, lo que potencialmente le da una ligera ventaja en esos contextos. 
+
+En resumen, aunque la notación de puntos ofrece una pequeña ventaja de rendimiento en algunos escenarios debido a la optimización en tiempo de compilación, la diferencia suele ser insignificante en los motores modernos. La decisión debe dar prioridad a la claridad del código y a la necesidad de acceso dinámico a las propiedades por encima de las microoptimizaciones. 
+*/
