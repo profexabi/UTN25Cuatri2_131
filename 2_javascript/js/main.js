@@ -159,10 +159,30 @@ let personas = [
 
 Iteracion en arrays: Arrays como una lista ordenada de elementos accesibles por indice
 
-for tradicional
+Bucle for tradicional
     - Maximo control, podemos usar break y continue
     - Mas verboso
 
+
+forEach()
+    - Sintaxis mas limpia, no necesita contador
+    - No se puede romper el bucle (no break)
+
+
+map()
+    - Transformamos cada elemento
+    - Retorna un nuevo array con los resultados
+
+
+filter()
+    - Seleccionar elementos que cumplan una condicion
+    - Retorna nueva array con elementos filtrado
+
+
+reduce()
+    - Reduce el array a un unico valor
+    - Retorna el valor acumulado
+    - https://www.w3schools.com/jsref/jsref_reduce.asp
 */
 
 //////////////////////
@@ -218,9 +238,153 @@ console.log(productosCaros);
 
 
 
+//////////////
+// forEach //
+
+// Imprimir elementos
+const colores = ["rojo", "azul", "verde"];
+
+colores.forEach(color => console.log(color));
+
+
+// Modificar array externo
+const listaNumeros = [1, 2, 3];
+const dobles = [];
+listaNumeros.forEach(numero => dobles.push(numero * 2));
+console.log(dobles);
+
+
+// Filtrar estudiantes aprobados
+const estudiantes = [
+    { nombre: "Kevin", nota: 10 },
+    { nombre: "Carlos", nota: 4 },
+    { nombre: "Lucia", nota: 8 },
+    { nombre: "Johnny", nota: 9 },
+    { nombre: "Maria", nota: 3 },
+    { nombre: "Marcos", nota: 2 }
+];
+
+estudiantes.forEach(estudiante => {
+    estudiante.aprobado = estudiante.nota >= 4;
+});
+
+console.log(estudiantes);
+
+
+
+//////////
+// map //
+
+// Creamos un array de cuadrados
+const nums = [1, 2, 3, 4];
+const cuadrados = nums.map(num => num * num);
+console.log(cuadrados);
+
+const doblesMap = listaNumeros.map(num => num * 2);
+console.log(doblesMap);
+
+// Convertir a string
+const edades = [25, 30, 18];
+const edadesStr = edades.map(edad => `Tengo ${edad} años`);
+console.log(edadesStr);
+
+// Extraer propiedades en un array de objetos
+const empleados = [
+    {id: 1, nombre: "Kevin", departamento: "IT"},
+    {id: 2, nombre: "Rodrigo", departamento: "RRHH"}
+];
+
+const nombresEmpleados = empleados.map(empleado => empleado.nombre);
+console.log(nombresEmpleados);
+
+const nombresEmp = [];
+empleados.forEach(empleado => nombresEmp.push(empleado.nombre));
+console.log(nombresEmp);
+
+// EJERCICIO SUGERIDO: Repitan este ejercicio con for clasico
+
+
+
+/////////////
+// filter //
+
+// Filtrar numeros pares
+const seisNumeros = [1, 2, 3, 4, 5, 6];
+const numerosPares = seisNumeros.filter(numero => numero % 2 === 0);
+console.log(numerosPares);
+
+
+// Filtrar strings largos
+const palabras = ["hola", "vecinito", "bienvenidiita", "chau"];
+const palabrasLargas = palabras.filter(palabra => palabra.length > 4);
+console.log(palabrasLargas);
+
+
+/*
+let personas = [
+    { nombre: "Juan", edad: 30, ocupacion: "Ingeniero"},
+    { nombre: "Maria", edad: 25, ocupacion: "Ingeniera"},
+    { nombre: "Carlos", edad: 35, ocupacion: "Diseñador"},
+];
+*/
+
+const masTreinta = personas.filter(persona => persona.edad >= 30);
+console.log(masTreinta);
+console.log(personas);
+
+
+// Filtrar multiples condiciones
+const ordenes = [
+    { id: 1, nombre: "Laptop", precio: 1000, cantidad: 1, completada: true },
+    { id: 2, nombre: "Mouse", precio: 20, cantidad: 3, completada: false  },
+    { id: 3, nombre: "Teclado", precio: 50, cantidad: 2, completada: true  },
+    { id: 4, nombre: "Impresora", precio: 500, cantidad: 1, completada: true  },
+    { id: 5, nombre: "Placa video", precio: 600, cantidad: 2, completada: true  },
+    { id: 6, nombre: "Monitor", precio: 200, cantidad: 3, completada: false  }
+];
+
+// Queremos filtrar ordenes completadas y que tengan mas de 1 cantidad en stock
+
+const completadasVarias = ordenes.filter(orden => orden.completada && orden.cantidad > 1);
+
+console.log(completadasVarias);
+
+
+/////////////
+// reduce //
+
+const decimales = [10, 20, 30, 40, 50];
+
+// Sumar elementos
+const sumaDecimales = decimales.reduce((acum, decimal) => acum + decimal, 0);
+console.log(sumaDecimales);
+
+// EJERCICIO SUGERIDO: Hagan esta misma operacion con un bucle for clasico
+
+// Sumar propiedades
+const ventas = [
+    { producto: "Camisa", cantidad: 3, precio: 25 },
+    { producto: "Pantalon", cantidad: 2, precio: 40 },
+    { producto: "Zapatos", cantidad: 1, precio: 80 }
+];
+
+const totalVentas = ventas.reduce((total, item) => total + (item.cantidad * item.precio), 0);
+console.log(totalVentas);
+// Si no especificamos el valor inicial de total, hara una concatenacion de valores, tomando el valor inicial como un objeto, devolviendo un confuso [object Object]8080
+
+
+
+
+/* EJERCICIO SUGERIDO: Hagan una sucesion de Fibonacci, pidan la cantidad de numeros de esa sucesion por prompt
+https://es.wikipedia.org/wiki/Sucesi%C3%B3n_de_Fibonacci
+*/
+
+
+// TO DO: find, findIndex, for...of, Iteracion en objetos entries(), keys(), values(), some(), every()
+
 
 /* ============================================
     Almacenamiento persistente en JavaScript
 ===============================================
-
+- Opcional para integrar en JavaScript VI -> Manipulacion del DOM
 */
