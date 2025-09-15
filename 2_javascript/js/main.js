@@ -1,282 +1,226 @@
 /* =============================
-     Introduccion a arrays
+    Objetos en JavaScript
 ================================
 
-- Un array es una lista ORDENADA de elementos, donde cada uno tiene una posicion o indice (index)
+- Los objetos en JavaScript son colecciones de pares clave-valor. Se usan para representar datos complejos en una en una estructura facil de gestionar
 
-- Los arrays en JavaScript pueden contener cualquier tipo de dato (numeros, strings, booleanos, otros arrays, objetos, funciones, etc)
-
-- Usaremos arrays cuando necesitemos almacenar una lista ordenada de elmentos (como una lista de nombre)
-
-
-
-=================================
-    Introduccion a objetos
-=================================
-
-- Un objeto en JavaScript es una coleccion de pares clave-valor. as claves son strings que identifican cada valor, lo que nos permite un acceso rapido y estructurado a los datos
-
-- Los objetos son utiles cuando queremos representar una entidad con multiples propiedades
-
-- Accedemos a las propiedades de un objeto a traves de notacion de punto y notacion de corchetes
-
-- Los objetos tambien pueden tener metodos, que son funciones almacenadas en una propiedad
-
-- Usaremos objetos cuando tenemos datos estructurados que puedne agruparse en propiedades clave-valor
-
-
-/////////////////////////////////////////
-// Comparacion entre Arrays y Objetos //
-
-Uso principal: 
-    Array: Lista ordenada de elementos     
-    Objeto: Colecciond e pares clave-valor
-
-Acceso a datos:
-    Array: Por indice (array[0])
-    Objeto: Notacion de punto o de corchete (objeto.clave / objeto["clave"])
-
-Metodos:
-    Array: .push(), .pop(), .map(), .forEach()
-    Objeto: Metodos personalizados y funciones
-
-Iteracion:
-    Array: .forEach(), .map(), bucles, etc
-    Objeto: for...in, Object.keys(), Object.values()
+- Un objeto se define usando llaves {} y contiene propiedades (valores asignados a las claves) -> Pares clave - valor
 */
 
-// Arrays
-let frutas = ["manzana", "banana", "naranja"];
+// Objeto literal o object literal: La manera mas comun de crear objetos en javaScript
+let auto = {
+    marca: "Toyota",
+    modelo: "Corolla",
+    anio: 2021,
+    getInfo: function() {
+        return `Este auto es un ${this.marca} del año ${this.anio}`;
+    }
+};
 
-console.log(frutas[0]); 
-console.log(frutas[2]);
+// Accedemos a las propiedades usando notacion de puntos (objeto.propiedad) o la notacion de corches (objeto["propiedad"])
+console.log(auto.marca);
+console.log(auto["anio"]);
+
+// Los objetos pueden contener funciones, conocidas como metodos
+// this: hace referencia al objeto desde el cual se esta invocando el metodo
+console.log(auto.getInfo());
 
 
-// Objetos
-let persona = { // Similar a los diccionarios en Python
-    nombre: "Kevin",
-    edad: 23,
-    ciudad: "Buenos Aires",
 
-    presentarse: function() { // Metodo de objeto persona
-        console.log("Soy profesor de programacion!")
+/* ===========================================================
+    Objetos globales en JavaScript: Navegador y Node.js
+==============================================================
+
+- Los objetos globales son aquellos que están disponibles en todo el entorno de ejecución sin necesidad de importarlos o declararlos explícitamente.
+
+- Su propósito es facilitar el acceso a ciertas funciones y valores predeterminados
+
+
+==============================================================
+Objetos globales en el navegador
+
+- En el entorno del navegador, los objetos globales incluyen todos los objetos estandar de JavaScript (Array, String, Object), asi como un conjunto de objetos especificos para la interaccion con la pagina web y su entorno
+
+1. window
+- El objeto global principal en el entorno del navegador es window.
+
+- Este objeto representa la ventana del navegador y actua como el contenedor global para todas las variables, funciones y objetos globales en una pagina web
+
+- Todos los objetos, variables y funciones definidos en el ambito global estan automaticamente disponibles como propiedades del objeto window
+
+    document
+    alert(), prompt(), confirm()
+    setTimeout() y setInterval()
+    location
+    navigator
+    console
+*/
+
+// document: representa el DOM de la pagina web actual, permitiendo al acceso y la manipulacion de elementos HTML
+let parrafoInfo = document.getElementById("parrafo-info");
+console.log(parrafoInfo);
+
+
+// alert(), prompt(), confirm(): Mostrar dialogos o pedir input al usuario
+
+// setTimeout() y setInterval()
+//setInterval(() => console.log("Hola despues de 1 segundo"), 1000);
+
+// location: Proporciona info sobre la URL actual de la pagina y nos permitira redireccionar a otras URL
+console.log(window.location.href); // Url actual
+
+// navigator: Contiene informacion sobre el navegador, como la version, el agente de usuario y la geolocalizacion
+console.log(navigator.userAgent);
+
+// console: Proporciona acceso a la consola del navegador para msotrar mensajes de depuracion
+console.log("Mensaje en la consola");
+
+
+
+/*==============================================================
+Objetos globales en Node.js
+
+- En Node.js, el entorno de ejecucion no tiene un objeto window como en los navegadores. En su lugar, existen otros objetos globales diseñados para trabajr con servidores, archivos y otros aspectos del SO
+
+- global: El objeto principal en Node.js es global, equivalente a window en el navegador
+
+    process: Proporcionar informacion y control sobre el proceso de ejecucion de Node.js
+    
+    __dirname y __filename: Variabels globales que contienen la ruta al directorio actual y al archivo actual
+
+    setTimeout() y SetInterval()
+
+    require(): Para improtar modulos en Node.js, lo que nos permite cargar bibliotecas externas o modulos internos en el archivo
+
+    console
+*/
+
+
+/* ============================================
+    Almacenamiento de datos en JavaScript
+===============================================
+
+- En JavaScript, almacenar datos implica elegir la estructura adecuada de acuerdo con el tipo de info que se quiere guardar y como se desea manipular
+
+- JavaScript proporciona varios tipos de estructuras para almacenar datos
+
+    - Variables simples:    Valores unicos como numeros y cadenas
+    - Objetos:              Para representar datos complejos con propiedades
+    - Arrays:               Para almacenar una lista de elementos, idealmente del mismo tipo
+    - Arrays de objetos:    Para manejar listas de elementos complejos que contienen multiples propiedades
+*/
+
+// Objeto persona
+let persona = {
+    nombre: "Juan",
+    edad: 30,
+    ocupacion: "Ingeniero"
+}
+
+/* ===============================================
+Objeto simple: Para una unica entidad
+- persona es un objeto que almacena varias propiedades de una persona.
+- usamos este tipo de almacenamiento cuando queremos acceder a atributos especificos de una unica entidad. 
+- Es muy util para representar conceptos unicos en la aplicacion
+
+Cuando usar objetos
+- Cuando deseamos representar una entidad unica con multiples atributos
+- Cuando sabemos que no habra multiples instancias o copias de estos datos en la aplicacion
+- Cuando necesitamos acceder a propiedades especificas mediante sus nombres
+
+
+===============================================
+Array simple: Idealmente para listas sencillas de datos primitivos 
+- Para una lista ORDENADA de elemntos individuales (lista de nombres o identificadores), donde cada elemento no requiere atributos adicionales
+
+
+===============================================
+Arrays de objetos
+- Si necesitamos almacenar varias instancias del mismo tipo de entidad (lista de personas, productos, pedidos), es muy comun utilizar un array de objetos
+
+-Un array de objetos es una estructura que permite almacenar multiples objetos, donde cada objeto tiene la misma estructura o contiene atributos similares
+
+Cuando usar arrays de objetos
+- Cuando necesitamos almacenar multiples instancias de una misma entidad o estructura de datos
+- Cuando planeamos realizar operaciones sobre una lista de elementos
+- Si necesitamos aplicar metodos de los arrays como map, filter, reduce, find, etc
+*/
+
+let personas = [
+    { nombre: "Juan", edad: 30, ocupacion: "Ingeniero"},
+    { nombre: "Maria", edad: 25, ocupacion: "Ingeniera"},
+    { nombre: "Carlos", edad: 35, ocupacion: "Diseñador"}
+];
+
+
+/* =====================================================
+    Iteracion en arrays, objetos y arrays de objetos
+========================================================
+
+Iteracion en arrays: Arrays como una lista ordenada de elementos accesibles por indice
+
+for tradicional
+    - Maximo control, podemos usar break y continue
+    - Mas verboso
+
+*/
+
+//////////////////////
+// for tradicional //
+
+// Sumar elementos en array simple
+const numeros = [1, 2, 3, 4, 5];
+let suma = 0;
+
+for (let i = 0; i < numeros.length; i++) {
+    suma += numeros[i];
+}
+
+console.log(suma);
+
+// Buscar elemento en array simple
+const frutas = ["manzana", "banana", "naranja"];
+let frutaEncontrada = null;
+// frutas[0] -> manzana
+
+for (let i = 0; i < frutas.length; i++) {
+    if(frutas[i].startsWith("ban")) {
+        frutaEncontrada = frutas[i];
+        break;
     }
 }
 
-// Notacion de punto
-console.log(persona.nombre); 
-
-// TO-DO, sin desplegar es copia y desplegando es referencia del objeto?
-
-// Notacion de corchetes
-console.log(persona); // La consola del navegador imprime una referencia, no una copia! (al desplegar el objeto en la consola del navegador?)
-
-console.log({...persona}); // Aca imprimimos una copia del objeto hasta ese momento
-console.log(persona["ciudad"]);
-
-persona.presentarse(); // Usamos el metodo del objeto
-
-// Agregamos una propiedad
-persona.lenguaje = "JavaScript";
-// console.log(persona);
-
-// Modificamos una propiedad
-persona.lenguaje = "Python";
-
-// Eliminamos una propiedad
-delete persona.edad;
-
-persona.ciudad = "Mendoza";
-console.log(persona);
+console.log(frutaEncontrada);
 
 
+// Filtrar objetos en array de objetos
+const productos = [
+    { id: 1, nombre: "Laptop", precio: 1000 },
+    { id: 2, nombre: "Mouse", precio: 20 },
+    { id: 3, nombre: "Teclado", precio: 50 },
+    { id: 4, nombre: "Impresora", precio: 500 },
+    { id: 5, nombre: "Placa video", precio: 600 },
+    { id: 6, nombre: "Monitor", precio: 200 }
+];
 
-/* ========================
-    Metodos de strings
-===========================
+// productos[2].nombre; // Mouse
+// productos[0].precio; // 1000
 
-En JavaScript son todo objetos, salvo los tipos primitivos
-Pero incluso los tipos primitivos (cadenas de caracteres, numeros, etc), JavaScript los trata como si fueran objetos.
+const productosCaros = [];
 
-Esto sucede por los object wrappers o envolvedores de objetos. Donde JavaScript envuelve estos tipos de datos y les proporciona metodos para poder manipularlos
-*/
-
-// 1. length: nos devuelve la longitud del string
-console.log("Hola".length); 
-
-// Ejemplo object wrapper, iterando un string
-let saludos = "Saludos"; // Cadena de caracteres para iterar
-
-for (let i = 0; i < saludos.length; i++) { // Recorro cada caracter del string como un array
-    console.log(saludos[i]);
-} // Devuelve cada caracter
-
-console.log("///////////////////");
-
-
-//  2. charAt: Devuelve el caracter en la posicion especificada
-console.log(
-    "Hola".charAt(2)
-)
-
-
-// 3. concat: Concatena strings
-console.log("Hola".concat(" ", "mundo"));
-
-
-// 4. includes: Devuelve true si el substring esta en el string
-console.log("JavaScript".includes("Script"));
-
-
-// 5. startsWith: Comprueba si el string comienza con el substring
-console.log("Hola mundo".startsWith("Hola"));
-
-
-// 6. endsWith: Comprueba si el string termina con el substring
-console.log("Hola mundo".endsWith("ndo"));
-
-
-// 7. indexOf: Devuelve el indice de la primera aparicion del substring
-console.log("banana".indexOf("a"));
-
-
-// 8. lastIndexOf: Devuelve la ultima aparicion del substring
-console.log("banana".lastIndexOf("a"));
-
-
-// 9. replace: Reemplaza una parte del string
-console.log("Hola mundo".replace("mundo", "division 132"));
-
-
-// 10. replaceAll: Reemplaza todas las apariciones
-console.log("1,2,3".replaceAll(",", ";"));
-
-
-// 11. toLowerCase: Convierte a minusculas
-console.log("AGUANTE JAVASCRIPT".toLowerCase());
-
-
-// 12. toUpperCase: Convierte a mayusculas
-console.log("holis".toUpperCase());
-
-
-// 13. trim: Elimina espacios en blanco al principio y al final
-console.log("      hola          ".trim());
-
-// 14. trimStart: Elimina espacios al inicio
-console.log("         hola".trimStart());
-
-// 15. trimEnd: Elimina espacios al final
-console.log("hola                 ".trimEnd());
-
-// 16. slice: Extraemos parte del string
-console.log("JavaScript".slice(0, 4));
-console.log("Holis".slice(-3));
-
-// 17. substring: Similar a slice, pero no acepta negativos
-console.log("JavaScript".substring(4, 10));
-
-// substr: Obsoleto, similar a substring
-
-// 18. split: Divide el string en un array
-console.log("rojo,verde,azul".split(","));
-console.log("Hola mundo".split(" "));
-console.log("JavaScript".split(""));
-
-// 19. repeat: Repite el string
-console.log("ji".repeat(3));
-
-// 20. match: Devuelve coincidencias con una expresion regular (REGEX)
-console.log("abce123".match(/[aeiou]/gi)); // Extraemos las vocales
-
-
-
-/* ========================
-    Metodos de arrays
-==========================*/
-// 1. length: devuelve la longitud del array
-console.log([1, 2, 3].length);
-
-let desayuno = ["avena", "pera", "pomelo", "banana", "semillas"];
-
-for (let i = 0; i < desayuno.length; i++) {
-    console.log(desayuno[i]);
+for (let i = 0; i < productos.length; i++) {
+    if(productos[i].precio > 200) {
+        productosCaros.push(productos[i]);
+    }
 }
 
-
-// 2. push: Agrega un elemento al final del array
-let arr = [1, 2];
-
-console.log(arr);
-arr.push(3);
-console.log(arr);
-
-
-// 3. pop: Elimina el ultimo elemento y lo devuelve
-arr.pop();
-console.log(arr);
-
-
-// 4. unshift: Agrega un elemento al inicio del array
-arr.unshift(0);
-console.log(arr);
-
-
-// 5. shift: elimina el primer elemento y lo devuelve
-console.log(arr.shift()); // lo podemos ver en consola
-console.log(arr);
-
-
-// 6. concat: concatena arrays
-let err = [3, 4]
-let orr = arr.concat(err);
-console.log(arr.concat(err));
-console.log(arr);
-console.log(orr);
-
-
-// 7. join: une los elementos en un string
-console.log(orr.join("-"));
-console.log(orr.join(""));
-console.log(orr.join(" "));
-
-
-// 8. slice: extrae una copia parcial del array
-console.log(orr.slice(1, 3));
-
-
-// 9. splice: modifica el array in situ y permite borrar y agregar
-console.log(orr);
-console.log(orr.splice(1, 0, "dos", "2"));
-console.log(orr);
-
-
-// 10. indexOf, lastIndexOf: primera y ultima posicion del elemento
-orr.push(2);
-console.log(orr.indexOf(2));
-console.log(orr.lastIndexOf(2));
-
-
-// 11. includes: devuelve true si el elemento existe
-console.log(orr.includes(3));
-console.log(orr.includes(5));
+console.log(productosCaros);
 
 
 
-/* =====================
-    EXTRA
-========================
 
-Comparativa de notación con punto frente a notación con corchetes en JavaScript
+/* ============================================
+    Almacenamiento persistente en JavaScript
+===============================================
 
-En JavaScript, la notación con punto (`objeto.propiedad`) y la notación con corchetes (`objeto[“propiedad”]`) son funcionalmente equivalentes para acceder a las propiedades de los objetos, pero difieren en cuanto a rendimiento y casos de uso. La notación con punto suele ser más rápida porque se beneficia de las optimizaciones en tiempo de compilación, lo que permite a los motores JavaScript resolver rápidamente el nombre de la propiedad directamente. Esto se debe a que el motor conoce el nombre exacto de la propiedad en tiempo de compilación, lo que se traduce en tiempos de acceso más rápidos.  
-
-La notación entre corchetes, aunque más versátil, requiere que el motor evalúe la expresión dentro de los corchetes en tiempo de ejecución, lo que introduce una ligera sobrecarga. Esta flexibilidad permite el acceso dinámico a las propiedades, como el uso de variables para los nombres de las propiedades o el acceso a propiedades con caracteres especiales o espacios, que la notación con punto no puede manejar. Por ejemplo, `person[propertyName]`, donde `propertyName` es una variable, o `person[“job-title”]`, con un nombre con guion, requieren la notación entre corchetes.  
-
-
-Históricamente, la diferencia de rendimiento era notable, y las pruebas comparativas mostraban que la notación de puntos era más rápida, por ejemplo, 25 ms frente a 35 ms para 10 millones de iteraciones.  Sin embargo, los motores JavaScript modernos como V8 (utilizado en Chrome y Node.js) han optimizado significativamente ambas notaciones, lo que hace que la diferencia de rendimiento sea insignificante en la mayoría de las aplicaciones.  De hecho, algunas pruebas en las versiones actuales de Chrome muestran que la notación entre corchetes con nombres de propiedades más largos puede ser entre un 4 % y un 6 % más rápida para la lectura de propiedades, aunque las operaciones de escritura tienen un rendimiento similar.
-
-A pesar de estas pequeñas diferencias de rendimiento, la elección entre una notación u otra debe basarse principalmente en la legibilidad, la facilidad de mantenimiento y el caso de uso específico. La notación de puntos es preferible para nombres de propiedades estáticos y conocidos debido a su sintaxis limpia y concisa.  La notación entre corchetes es esencial para el acceso dinámico, como la iteración sobre las propiedades de los objetos con bucles «for...in» o el acceso a propiedades basadas en valores calculados.  Además, la flexibilidad de la notación entre corchetes puede ayudar a los motores JavaScript a optimizar el código para escenarios que implican bucles o acceso basado en variables, lo que potencialmente le da una ligera ventaja en esos contextos. 
-
-En resumen, aunque la notación de puntos ofrece una pequeña ventaja de rendimiento en algunos escenarios debido a la optimización en tiempo de compilación, la diferencia suele ser insignificante en los motores modernos. La decisión debe dar prioridad a la claridad del código y a la necesidad de acceso dinámico a las propiedades por encima de las microoptimizaciones. 
 */
