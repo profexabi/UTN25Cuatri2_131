@@ -106,9 +106,7 @@ console.log(parrafos);
 console.log(parrafos[0]);
 
 parrafos.forEach(parrafo => console.log(parrafo.textContent));
-
 console.log(document);
-
 
 
 
@@ -162,9 +160,107 @@ fetch("https://jsonplaceholder.typicode.com/users")
     });
 
 
+// Modificacion de atributos
+let miBoton = document.getElementById("miBoton");
+
+miBoton.setAttribute("id", "nuevoId");
+
+miBoton.style.backgroundColor = "dodgerblue";
+miBoton.style.color = "white";
+
+
+// TO DO EXTRA: Si da tiempo y vamos bien, al termino de la cursada createElement(), appendChild(), removeChild() y comparacion entre textContent y innerHTML
+
+
+
+/*==========================
+    Eventos en JavaScript
+============================
+
+Un evento es la señal que se envia cuando ocurre una interaccion o cambio en el documento
+Estos eventos pueden ser un click, una pulsacion de tecla, etc
+JavaScript permite escuchar estos eventos y ejecutar funciones especificas cuando ocurren
+
+- click:        Ocurre cuando el usuario hace click sobre un elemento
+- mouseover:    Ocurre cuando el usuario pasa el mouse sobre un elemento
+- input:        Cuando el usuario introduce texto en un campo
+- submit:       Ocurre cuando se envia un formulario
+
+Para escuchar un evento y responder a el, podemos usar el metodo de addEventListener()
+Este metodo permite adjuntar una funcipon a un evento especifico en un elemento
+
+addEventListener -> Añadir escuchador de eventos
+
+
+
+================================
+    Tipos comunes de eventos
+================================
+
+- Eventos de mouse:         click, dbclick, mouseover, mouseout, mousemove
+- Eventos de teclado:       keydown, keyup
+- Eventos de formulario:    submit, input, focus
+- Eventos de ventana:       resize, scroll, load
+*/
+
+// Seleccionamos el elemento boton y vamos a hacer que reaccione a los clicks
+miBoton.addEventListener("click", function() {
+    console.log("Holis soy un boton");
+});
+
+
+let inputPrueba = document.getElementById("inputPrueba");
+
+// Cuando quiero tener informacion o metodos del evento
+inputPrueba.addEventListener("keydown", function(event) { 
+
+    // event es el objeto que contiene TODOS los datos del evento
+    console.log(`Tecla presionada: ${event.key}`);
+});
+
+
+
+/* ===========================
+    Propagacion de eventos
+==============================
+
+Cuando ocurre un evento, este se propaga a traves del DOM en dos fases:
+
+    - fase de captura (de arriba para abajo)
+    - fase de burbuja (de abajo hacia arriba)
+
+Podemos detener la propagacion de eventos con el metodo event.stopPropagation()
+
+Podemos evitar el comportamiento determinado de un elemento con event.preventDefault()
+*/
+
+let divPadre = document.getElementById("padre");
+let botonHijo = document.getElementById("hijo");
+
+// Escuchar el click en el div padre
+divPadre.addEventListener("click", function() {
+    console.log("Se hizo click en el div padre");
+});
+
+// Escuchamos el click en el boton hijo
+botonHijo.addEventListener("click", function(event) {
+    event.stopPropagation(); // Detenemos la propagacion con el metodo stopPropagation
+    console.log("Se hizo click en el boton hijo");
+});
+
+
+let miForm = document.getElementById("miForm");
+
+miForm.addEventListener("submit", function(event) {
+    event.preventDefault(); // Evito que el formulario se envie
+    console.log("Formulario no enviado");
+})
+
+
 
 /* ============================================
     Almacenamiento persistente en JavaScript
 ===============================================
 
+Pendiente
 */
