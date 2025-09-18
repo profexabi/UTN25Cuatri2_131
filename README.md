@@ -194,6 +194,21 @@ reduce()
     - Reduce el array a un unico valor
     - Retorna el valor acumulado
     - https://www.w3schools.com/jsref/jsref_reduce.asp
+
+
+find() y findIndex()
+    - Busca el primer elemento que cumpla una condicion
+    - Retorna ese elemento o indice (con undefined o -1 si no lo encuentra)
+
+
+for...of
+    - Proporciona una sintaxis limpia, permite break y continue
+    - No provee indice automatico
+
+
+some() y every()
+    - Verifican si alguno/todos cumplen una condicion
+    - Retornan un booleano
 */
 
 //////////////////////
@@ -361,6 +376,7 @@ const completadasVarias = ordenes.filter(orden => orden.completada && orden.cant
 console.log(completadasVarias);
 
 
+
 /////////////
 // reduce //
 
@@ -385,19 +401,167 @@ console.log(totalVentas);
 
 
 
-
 /* EJERCICIO SUGERIDO: Hagan una sucesion de Fibonacci, pidan la cantidad de numeros de esa sucesion por prompt
 https://es.wikipedia.org/wiki/Sucesi%C3%B3n_de_Fibonacci
 */
 
 
-// TO DO: find, findIndex, for...of, Iteracion en objetos entries(), keys(), values(), some(), every()
+
+///////////////////////
+// find y findIndex //
+const numerosRandom = [5, 12, 8, 130, 44];
+
+const encontrado = numerosRandom.find(num => num > 10);
+console.log(encontrado);
 
 
-/* ============================================
-    Almacenamiento persistente en JavaScript
-===============================================
-- Opcional para integrar en JavaScript VI -> Manipulacion del DOM
+const indice = numerosRandom.findIndex(num => num > 100);
+console.log(indice);
+
+
+const estudianteAprobado = estudiantes.find(estudiante => !estudiante.aprobado);
+console.log(estudianteAprobado);
+
+
+const tareas = [
+    {id: 1, descripcion: "Comprar fruta", completada: false},
+    {id: 2, descripcion: "Estudiar Progra III", completada: true},
+    {id: 3, descripcion: "Hacer ejercicio", completada: false}
+];
+
+// Indice de la primera tarea compeltada
+const tareaCompletada = tareas.findIndex(tarea => tarea.completada); // Devuelve una referencia del objeto!
+console.log(tareaCompletada);
+
+console.table(estudiantes);
+
+
+///////////////
+// for...of //
+const simbolos = ['€', '$', '¥', '£'];
+
+for (let simbolo of simbolos) {
+    if(simbolo === '¥') {
+        break;
+    }
+    console.log(simbolo);
+}
+
+const seleccionEmpleados = [
+    {id: 1, nombre: "Kevin", departamento: "IT", salario: 3000 },
+    {id: 2, nombre: "Rodrigo", departamento: "RRHH", salario: 3500 },
+    {id: 3, nombre: "Rocio", departamento: "RRHH", salario: 4000 }
+];
+
+// Con for...of romperemos el bucle al encontrar el primer empleado que gane 3500 o mas
+
+for (let empleado of seleccionEmpleados) {
+    if (empleado.salario >= 3500) {
+        console.log(`${empleado.nombre} su salario es ${empleado.salario}`);
+        break;
+    }
+}
+
+
+
+///////////////////
+// some y every //
+const nuevosNumeros = [1, 3, 5, 7, 8];
+const hayPares = nuevosNumeros.some(num => num % 2 === 0);
+console.log(`Existe algun numero par? ${hayPares}`);
+
+const todosPositivos = nuevosNumeros.every(num => num > 0);
+console.log(todosPositivos);
+
+
+
+
+/* ========================
+    Iteracion en Objetos
+===========================
+Objetos como coleccion de pares clave-valor
+Accedemos a propiedades y modificamos valores
+
+- for...in: Para iterar claves
+
+- Object.keys() para obtener claves
+
+- Object.values() para obtener valores
+
+- Object.entries() para obtener pares clave-valor
+*/
+
+
+const estudiante = { nombre: "Alejo", edad: 20, curso: "Progra III" };
+
+console.log(estudiante["nombre"]);
+
+// Iteramos las claves con for...in
+for (let propiedad in estudiante) {
+    console.log(`${propiedad}: ${estudiante[propiedad]}`); //estudiante["clave"]
+}
+
+// Object.keys()
+const claves = Object.keys(estudiante);
+console.log(claves);
+claves.forEach(clave => console.log(clave));
+
+
+// Object.values()
+const valores = Object.values(estudiante);
+console.log(valores);
+
+
+// Object.entries()
+for (const [clave, valor] of Object.entries(estudiante)) {
+    console.log(`${clave}: ${valor}`);
+}
+
+
+
+/* ================================
+    Comparacion de rendimiento
+===================================
+1. Bucles clasicos (for, while, do..while) son los mas rapidos para iteraciones simples
+
+2. Metodos funcionales (map, filter) son mas lentos pero mas expresivos
+
+3. for...of ofrece un excelente equilibrio entre rendimiento y legibilidad
+
+
+Recomendaciones de uso:
+
+- Transformar array:        map()
+- Filtrar elementos:        filter()
+- Reducir a un valor:       reduce()
+- Buscar elemento:          find() y findIndex()
+- Necesidad romper bucle:   for y for...of (con break y continue)
+
+
+
+
+==============================
+    EXTRA let vs const
+==============================
+
+https://stackoverflow.com/questions/41086633/in-javascript-why-should-i-usually-prefer-const-to-let
+
+Argumentos a favor del uso de const por defecto
+
+- Evita los efectos secundarios causados por reasignaciones involuntarias.
+- Durante una revisión del código, elimina la incertidumbre, ya que el desarrollador que ve una variable const puede contar con la certeza de que no será reasignada.
+- Quizás podríamos decir que es más coherente con la programación funcional y los estados inmutables.
+- Con TypeScript, hay algunos casos con mejores inferencias.
+
+
+Argumentos a favor del uso de let por defecto
+
+- La reasignación no es algo peligroso, es simplemente... habitual.
+- Si una variable puede reasignarse, entonces debe declararse con let, porque es más expresivo reservar const para las constantes reales;
+- const es engañoso porque no impide que se modifiquen las referencias;
+- Son dos caracteres más que escribir y agrupar;
+- El uso de const por defecto es inconsistente con los parámetros de las funciones;
+- No hay ninguna ganancia de rendimiento al usar const.
 */
 ```
 
