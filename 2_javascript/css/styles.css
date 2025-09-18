@@ -8,3 +8,9 @@ body {
     color: var(--blanco-fuente);
     font-family: monospace;
 }
+
+.destacado {
+    color: dodgerblue;
+    font-weight: bold;
+    font-size: larger;
+}
