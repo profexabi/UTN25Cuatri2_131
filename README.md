@@ -273,8 +273,191 @@ miForm.addEventListener("submit", function(event) {
     Almacenamiento persistente en JavaScript
 ===============================================
 
-Pendiente
+JavaScript nos permite ciertas funcionalidades extra para poder recordar información y que esta persista del lado del cliente.
+Los tres metodos principales para el almacenamiento en el cliente (quiere decir que la información no se guarda en el servidor), son localStorage, sessionStorage y las cookies
+
+
+========================
+    localStorage
+========================
+localStorage es una API (funcionalidad extra que complementa JavaScript) que permite almacenar datos de manera persistente en el navegador.
+Casos de uso: Almacenar configuraciones de usuario, temas, carrito de compras,etc
+
+localStorage.setItem("tema", "oscuro");
+localStorage.setItem("idioma", "es");
+
+- Capacidad de almacenamiento: 5-10 MB
+- Persistencia: No tiene expiracion, esta disponible incluso cerrando el navegador o apagando la compu
+- Accesible solo desde JavaScript (no se envia al servidor)
+- Los datos se almacenan por dominio, y solo son accesibles dentro del mismo dominio
+- Los datos se almacenan como strings: Todos los datos almacenados en local son de tipo string, por lo que para almacenar otros tispo de datos, deben ser convertidos a strings 
+
+
+    localStorage.setItem("clave", "informacion texto plano");
+
+    localStorage.getItem("clave");
+
+    localStorage.removeItem("clave");
+
+    localStorage.clear();
+
+
+=========================
+    sessionStorage
+=========================
+sessionStorage es otra API muy similar a localStorage con una diferencia clave: los datos almacenados solo se mantienen disponibles durante la sesion del navegador. Si cerramos la pestaña o ventana del navegador, los datos se eliminar automaticamente.
+Uso tipico: Informacion de formularios o usuarios temporales
+
+sessionStorage.setItem("usuarioTemporal", "Rocio");
+
+
+- Capacidad de almacenamiento: 5-10 MB
+- Persistencia: Solo durante la sesion activa. Si se cierra la pestaña, los datos se pierten
+- Accesible solo desde JavaScript (no se envia al servidor)
+- Los datos se almacenan por dominio, y solo son accesibles dentro del mismo dominio
+- Los datos se almacenan como strings: Todos los datos almacenados en local son de tipo string, por lo que para almacenar otros tispo de datos, deben ser convertidos a strings 
+
+
+    sessionStorage.setItem("clave", "informacion texto plano");
+
+    sessionStorage.getItem("clave");
+
+    sessionStorage.removeItem("clave");
+
+    sessionStorage.clear();
+
+
+
+Cuando no usar nunca localStorage o sessionStorage?
+- Nunca guardemos informacion sensible como contraseñas o tokens de autenticacion. No seria seguras ya que el contenido es accesible desde cualquier script en la pagina
+
+- En ese caso, usariamos cookies seguras con HttpOnly y Secure
+
+
+=========================
+    Cookies
+=========================
+Las cookies son pequeños fragmentos de informacion que se almacenan en el navegador del usuario y se envian con cada peticion HTTP al servidor. Son mas antiguas que localStorage y sessionStorage y fueron ampliamente utilizadas para mantener la sesion del usuario, guardar preferencias, entre otros usos
+
+Caracteristicas:
+- Se envian automaticamente al  servidor con cada solicitud HTTP
+- Tamaño maximo: 4KB
+- Expiran seguin una fecha determinada (expires) o duracion (max-age)
+- Se pueden marcar con HttpOnly (accesibles solo desde el servidor) y Secure (Solo sobre HTTPS)
+
+Uso principal:
+- Autenticacion (tokens, sesion)
+- Preferencias del uusario que deben ser enviadas al servidor
+- Seguimiento (tracking) de actividad en la web
+
+
+No existe una API estandar para gestionar cookies, pero las manejamos con el objeto document.cookie
+Usaremos Cookies, en lugar de localStorage o sessionStorage si estamos trabajando con limites mas estrictos en tamaño o seguridad
+
+
+    
+==========================
+    Metodos de JSON
+==========================
+- Para poder transformar texto plano JSON a objetos JavaScript, usaremos JSON.parse()
+
+- Para poder transformar objetos JavaScript a texto plano JSON, usaremos JSON.stringify()
 */
+
+
+///////////////////////////////////
+// Guardamos datos en localStorage
+localStorage.setItem("nombre", "Kevin"); // De la misma manera que hacemos con objetos, guardamos la info con la clave nombre
+
+
+///////////////////////////////////
+// Obtenemos datos del localStorage -> devTools / Application o Almacenamiento / Local Storage
+let nombre = localStorage.getItem("nombre");
+console.log(nombre);
+
+
+//////////////////////////////////////////////////////
+// Conversion de datos para almacenar en localStorage
+
+// Como carrito es un array de objetos, guardado como string (texto plano) -> JSON
+// Necesitamos convertir a objetos JavaScript nuestro string JSON (formato de texto plano)
+let carrito = JSON.parse(localStorage.getItem("carrito")); 
+console.table(carrito);
+
+// Creamos un objeto estudiante
+let estudiante = {
+    nombre: "Rocio",
+    cuadro: "Club Atletico Imparcial de Tucuman"
+};
+
+// Convertimos nuestro objeto estudiante en texto plano JSON para poder almacenarlo en localStorage
+localStorage.setItem("estudiante", JSON.stringify(estudiante));
+
+console.log(localStorage.getItem("estudiante")); // String: {"nombre":"Rocio","cuadro":"Club Atletico Imparcial de Tucuman"}
+
+// Quiero traer mi clave estudiante desde localStorage, almacenado en formato JSON
+let estudianteAlmacenado = JSON.parse(localStorage.getItem("estudiante"));
+
+console.log(estudianteAlmacenado); // Objeto: { nombre: 'Rocio', cuadro: 'Club Atletico Imparcial de Tucuman' }
+
+
+/////////////////////////////////////////////////
+// Eliminar un dato especifico del localStorage
+localStorage.removeItem("nombre");
+
+
+
+/////////////////////////////////
+// Limpiar todo el localStorage
+// localStorage.clear();
+
+
+// TODO: Practiquen a almacenar el carrito de compra
+
+
+
+/* =================
+    Cookies
+==================*/
+// Creamos una cookie
+document.cookie = "usuario=Kevin; expires=Fri, 31 Dec 2025 23:59:59 UTC; path=/";
+
+// Creamos una cookie sin expiracion (se eliminara al cerrar el navegador)
+document.cookie= "pais=Argentina; path=/";
+
+// Leemos las cookies
+console.log(document.cookie);
+
+// Eliminamos las cookies (ponemos una fecha de expiracion en el pasado)
+// document.cookie = "usuario= ; 01 Jan 1970 00:00:00 UTC; path=/"
+
+
+// Ejemplo completo de uso de cookies
+function setCookie(name, value, days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+}
+
+// Obtener el valor de una cookie
+function getCookie(name) {
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+        let cookie = cookies[i].trim();
+        if (cookie.indexOf(name + "=") === 0) {
+            return cookie.substring(name.length + 1, cookie.length);
+        }
+    }
+    return "";
+}
+
+// Establecemos una cookie
+setCookie("idioma", "es", 7);
+
+// Leemos una cookie
+console.log(getCookie("idioma"));
 ```
 ---
 
