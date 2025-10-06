@@ -446,6 +446,15 @@ El spread operator en JavaScript -> ...
 Es una sintaxis introducida en ES6 que permite descomponer elementos iterables como arrays, string y objetos en elementos individuales.
 
 Su principal funcion es copiar, combinar o expandir estructuras de datos de manera eficiente
+
+
+Que nos permite el Spread Operator?
+
+    - Manipulacion de arrays (copiar, concatenar)
+
+    - Combinacion de objetos 
+    
+    - Paso de argumentos a funciones
 */
 
 const original = [1, 2, 3];
@@ -476,8 +485,256 @@ const [prime, ...rest] = nums;
 //spread operator -> expandir elementos
 const persona = { nombre: "Kevin", edad: 23 };
 const copiaPersona = { ...persona, ciudad: "Buenos Aires" };
+
+console.log(copiaPersona);
+
+
+// Combinamos objetos
+let estandar = { tema: "oscuro", fontSize: 14 };
+let preferenciasUser = { fontSize: 18 };
+let preferenciasCustom = { ...estandar, ...preferenciasUser };
+console.log(preferenciasCustom);
+
+
+// Spread operator en funciones
+
+// Pasamos argumentos desde un array
+function sum (a, b, c, d) { return a + b + c + d };
+// const nums = [1, 2, 3, 4];
+console.log(sum(...nums));
+
+// Recogemos argumentos restantes
+function logArguments(primero, ...resto) {
+    console.log(primero);
+    console.log(resto);
+}
+
+logArguments("a", "b", "c");
+
+
+
+/*======================
+    Closures
+========================
+Una closure es una funcion que recuerda el scope en el que fue creada, incluso despues de que se haya finalizado su ejecucion.
+
+Por tanto, una funcion interna puede acceder a las variables de su funcion externa incluso despues de que esta haya terminado de ejecutarse
+
+Cada vez que creamos una funcion dentro de otra funcion, se crea una closure. La funcion interna captura las variables de su entorno (scope) externo y mantiene una referencia a ellas (no una copia)
+
+
+Ejemplo crearContador:
+
+    - crearContador retorna una funcion interna anonima
+    - esta funcion RECUERDA la variable contador aunque crearContador ya termino su ejecucion
+    - cada vez que llamamos a contar, estamos invocando la misma closure que manitiene su propio estado interno
+
+Una closure ocurre cuando una funcion interna accede a variables de su funcion externa, incluso cuando la externa termino de ejecutarse. Las closures nos permiten
+
+    - Recordar valores sin usar variables globalbes
+    - Crear funciones privadas
+    - Hacer el codigo mas limpio y modular
+*/
+
+function crearContador() {
+    let contador = 0;
+
+    return function() {
+        contador++;
+        return contador;
+    }
+}
+
+const contar = crearContador();
+
+console.log(contar()); // 1
+console.log(contar()); // 2
+console.log(contar()); // 3
+console.log(contar()); // 4 
+console.log(contar()); // 5
+
+
+
+/* ====================
+    Callbacks parte 2
+=======================
+
+Ejemplo asincronico con setTimeout
+
+setTimeout es una funcion que acepta un callback (una funcion a ejecutar)
+
+No detiene la ejecucion del codigo. En su lugar, el callback se ejecuta despues del tiempo indicado, cuando el event loop lo permite
+
+
+Ventajas de los callbacks
+
+    - Permiten la modularidad del codigo (pasar funciones como argumentos)
+    - Permiten controlar el flujo en entornos asincronicos
+    - Son la base de abstracciones mas complejas como promesas y async/await
+*/
+
+console.log("Inicio");
+
+setTimeout(() => {
+    console.log("Esto se ejecuta despues de 2 segundos")
+}, 2000);
+
+console.log("Fin");
+
+/* Ejemplo callbacks sincronicos
+
+    - Estos callbacks se ejecutan inmediatamente dentro del mismo ciclo de ejecucion
+    - Usados en funciones como forEach, map, filter, etc
+*/
+[1, 2, 3].forEach(n => {
+    console.log(n);
+});
+
+
+/* Ejemplo callback asincronico
+
+    - Estos callbacks se ejecutan despues de un tiempo o de que termine una operacion externa
+    - Son fundamentales en programacion asincronica como AJAX
+*/
+
+setTimeout(() => {
+    console.log("Tarea asincronica completada");
+}, 1000);
+
+
+/*==================
+    Callback Hell
+====================
+
+Hadouken de callback hell https://blog.da2k.com.br/uploads/2015/03/hadouken.jpg
+
+El callback hell ocure cuando tenemos muchas funciones anidadads dentro de otras, especialmente cuando hacemos tareas asincronicas, como leer archivos, esperar respuestas del servidor.
+
+El codigo se vuelve dificil de leer, dificil de mantener y facil de romper
+
+
+Como podemos solucionar esto?
+
+1. Usando Promise
+
+    hacerAlgo()
+        .then(res1 => hacerAlgoMas(res1))
+
+        .then(res2 => continuar(res2))
+
+        .then(res3 => terminar(res3))
+
+        .then(() => console.log("Listo!"))
+
+        .catch(error => console.error(error));
+
+
+2. Usando async/await (mas moderno y legible)
+
+async function ejecutarTareas() {
+
+    try {
+        const res1 = await hacerAlgo();
+
+        const res2 = await hacerAlgoMas(res1);
+
+        const res3 = await continuar(res2);
+
+        await terminar(res3);
+
+        console.log("Listo!");
+    
+    } catch(error) {
+
+        console.error(error);
+    }
+}
+*/
+
+// Ejemplo de callback hell con setTimeout
+// Cada setTimoeut depende del anterior, y termina siendo un codigo feo y poco manejable
+setTimeout(() => {
+    console.log("Paso 1");
+
+    setTimeout(() => {
+        console.log("Paso 2");
+
+        setTimeout(() => {
+            console.log("Paso 3")
+
+            setTimeout(() => {
+                console.log("Paso 4"); 
+            }, 1000)
+        }, 1000)
+    }, 1000)
+}, 1000);
+// Nuestro codigo termina siendo una escalera confusa y dificil de depurar
+
+
+
+// Ejemplo con Promesas
+fetch("https://jsonplaceholder.typicode.com/users") // Traemos el choclo JSON de una URL
+    .then(response => response.json()) // Transformamos el JSON en objetos JavaScript
+    .then(data => console.table(data)) // Mostrarmos nuestros objetos JavaScript por consola
+    .catch(error => console.error(error)); // Si hubiera un error, lo mostraria en consola con un formato error
+
+
+// Ejemplo con async/await
+async function obtenerDatos() {
+    try {
+
+        // Traemos el choclo JSON de una URL
+        const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+
+        // Transformamos el JSON en objetos JS
+        const data = await res.json();
+
+        // Mostramos nuestros objetos JS por consola
+        console.table(data);
+
+
+    } catch(err) {
+        // Si hubiera un error, lo mostraria en consola con un formato error
+        console.error(err);
+    }
+}
+
+
+obtenerDatos();
+
+
+
+/*================================
+    Web APIS
+==================================
+
+API (Application Programming Interface) o Interfaz de Programacion de aplicaciones
+
+Una API es un conjunto de funciones y herramientas que usamos para interactuar con algo, sea el navegador, el servidor o una libreria.
+
+
+Una web API, en el contexto del navegador (Firefox, Chrome, ble), una Web API es una funcion o conjunto de funciones que el navegador nos proporaciona para usarlas con JavaScript.
+
+El lenguaje JavaScript tal cual es más plano y limitado, pero el entorno de ejecución nos va a permitir funciones y utilidades extra, para acceder a funcionalidades especiales
+
+- Manipular el DOM, con document.getElementById
+- Esperar un tiempo con setTimeout
+- Hacer peticiones HTTP con fetch
+- Trabajar con audio, video, GPS, etc
+
+
+- Ojo, fetch es una API, porque no es parte del lenguaje JavaScript "puro"
+- Es una funcion que el navegador le da a JAvaScript para que pueda hacer peticiones a servidores web
+- Por eso decimos que es una web api que el navegador expone
+
+
+- JavaScript es el lenguaje
+- Las Web APIs son funciones extra que el navegador le presta a JavaScript para hacer cosas utiles
+- JavaScript usa estas herramientas, pero son externas al lenguaje puro en si
+*/
 ```
 
+![Callback hell Hadouken](https://blog.da2k.com.br/uploads/2015/03/hadouken.jpg)
 
 ---
 
