@@ -8,8 +8,10 @@
 
 ## Anotaciones
 
-- Spread operator en objetos
-- Continuar con closures, callback hell, promises, web apis
+- [Chusmear codigos de estado HTTP](https://http.cat/)
+- [Chusmear compatibilidad entre navegadores](https://caniuse.com/?search=json)
+- **Recomendacion**: Ir avanzando con el TP, adaptando el parcial para consumir los datos de aca
+    - [API Rest publica de tienda de productos](https://fakestoreapi.com/products/)
 
 ---
 
@@ -31,9 +33,10 @@
         - logo.ico
 
 ```js
-/*====================
-    Callback
-======================
+/*========================================
+    1. Callbacks
+==========================================
+
 Un callback es una funcion que se pasa como argumento a otra funcion y que se ejecuta despues de que algo haya ocurrido
 
 Es como decirle a la funcion, cuando termines todo el codigo, llamas a esta otra funcion.
@@ -45,9 +48,212 @@ Se usan principalmente para:
     - Hacer el codigo mas flexible y utilizable
 
 
+Los callbacks se usan mucho para
 
+    - Manejar eventos del usuario con addEventListener
+    - Operaciones asincronas
+    - Temporizadores
+    - Procesamiento de datos
+    - Comunicacion con servidores
+*/
+
+// Callbacks: Funciones que se pasan como argumentos a otras funciones para ser ejecutadas despues
+
+// Callbacks ej 1: Procesando datos
+function procesarDatos(datos, callback) {
+    console.log("Procesando datos");
+    const resultado = datos.toUpperCase();
+    callback(resultado); // Ejecuta la funcion callback
+}
+
+procesarDatos("hola mundo", (res) => {
+    console.log("Resultado:", res); // Resultado: HOLA MUNDO
+});
+
+
+
+
+// Callbacks ej 2: Otro callback
+function primerSaludo(nombre, callback) {
+    console.log("Llamada a la primer funcion");
+    console.log(`Hola ${nombre}`);
+    callback(nombre); // La funcion callback recibe tambien este parametro
+}
+
+function despedirse(nombre) {
+    console.log("Ejecutando funcion callback")
+    console.log(`Chau ${nombre}`);
+}
+
+primerSaludo("Emmanuel", despedirse); // Hola Emmanuel  Chau
+
+
+
+
+/* ================================
+    Caracteristicas principales
+===================================
+
+1. Funciones como ciudadanos de primera clase, esto significa que las funciones pueden ser
+
+    - Asignadas a variables
+    - Pasadas como argumentos
+    - Retornadas desde otras funciones
+*/
+
+// Asignando funcion a variable
+let miCallback = function() {
+    console.log("Callback ejecutado");
+}
+
+function ejecutarCallback(callback) {
+    callback();
+}
+
+ejecutarCallback(miCallback);
+
+
+
+
+// 2. Sincronia y Asincronia
+
+// Callback sincrono simulando un proceso pesado -> Esto bloquea el hilo principal!
+function procesoPesado(callback) {
+    console.log(`Iniciando proceso...`);
+
+    // Simulamos una tarea pesada
+    for (let i = 0; i < 2000; i++) {
+        callback();
+    }
+}
+/*
+procesoPesado(function() {
+    console.log("Proceso completado");
+});
+
+console.log("Esto se ejecuta despues del callback");
+*/
+
+
+
+// Callback asincrono -> No bloquea el hilo principal, sino que se ejecuta en paralelo
+function procesoAsincrono(callback) {
+    console.log("Iniciando proceso asincrono");
+
+    // Simulamos el procesamiento
+    setTimeout(function() {
+        callback();
+    }, 6000);
+}
+
+procesoAsincrono(function() {
+    console.log("Proceso asincrono completado");
+});
+
+console.log("Esto se ejecuta inmediatamente")
+
+
+
+
+/*======================================
+    Casos de uso comunes de Callbacks
+========================================
+
+1. Temporizadores o timers
+
+// setInterval es una funcion asincrona que se ejecuta cada x segundos
+setInterval(() => {
+    console.log("Holis cada medio segundo");
+    }, 500);
+    */
+   
+// setTimeout es una funcion asincrona que se ejecuta una sola vez al cabo de un tiempo
+setTimeout(function() {
+    console.log("Holis despues de 2 segs");
+}, 2000);
+
+
+let cont = 0;
+
+let intervalo = setInterval(() => {
+    cont++;
+    console.log(`Contador: ${cont}`)
+
+    if (cont === 5) {
+        clearInterval(intervalo);
+        console.log("Detenemos nuestro setInterval");
+    }
+}, 1000);
+    
+   
+
+// 2. Eventos del DOM
+let botonPrueba = document.getElementById("botonPrueba");
+
+botonPrueba.addEventListener("click", function(evento) {
+    console.log(`Boton clickeado`, evento.target);
+});
+
+
+
+// 3. Operaciones con arrays
+const numeros = [1, 2, 3, 4, 5];
+
+// forEach
+numeros.forEach(function(num, indice) {
+    console.log(`Indice: ${indice}, valor: ${num}`);
+});
+
+
+// map
+let numsDobles = numeros.map(function(numero) {
+    return numero * 2;
+});
+console.log(numsDobles);
+
+
+
+// filter
+// let numsParess = numeros.filter(n => n % 2 === 0);
+let numsPares = numeros.filter(function(n) {
+    return n % 2 === 0;
+});
+console.log(numsPares);
+
+
+
+// 4. Peticiones HTTP
+// Mirar abajo en Promesas y asnyc / await
+
+
+
+// 5. Lectura de archivos (Node.js)
+// Ver leccion Node.js
+/*
+// Improtaremos file system
+const fs = require("fs");
+
+// Lectura asincrona
+fs.readFile("info.txt", "utf8", function(error, contenido) {
+    if (error) {
+        console.error("Error leyendo archivo: ", error);
+        return;
+    }
+
+    console.log("Contenido del archivo: ", contenido);
+});*/
+
+// Desventajas de callbacks -> Pueden general callback hell! Ir abajo
+
+
+
+
+
+
+
+/*
 ==========================================================
-    Diferencia entre callbacks y High Order Functions
+    Diferencia entre Callbacks y High Order Functions
 ==========================================================
 
 Callback es la funcion pasada como argumento
@@ -57,33 +263,188 @@ High Order Function es la funcion que recibe o devuelve funciones
 Estan relacionadas pero no son equivalentes. Un callback es usando dentro de una HOF, pero no todas las HOF usan callbacks explicatamente (porque pueden devolver funciones en lugar de recibirlas)
 */
 
-// Saludar es una funcion que saluda a alguien
-function saludar(nombre) {
-    console.log(`Hola ${nombre}`);
+
+
+/* ===============================
+    Funciones de orden superior
+    High Order Functions
+==================================
+
+Una funcion de orden superior es una funcion que puede hacer al menos una de estas dos cosas
+
+    1. Recibir una o mas funciones como argumento(s)
+    2. Devolver una funcion como resultado
+
+Las funciones de orden superior operan sobre otras funciones, ya sea tomandolas como parametros o retornandolas. 
+
+
+Por que usar funciones de orden superior?
+
+    - Abstraccion: Permiten escribir codigo mas abstracto y reutilizable
+    - Composicion: Facilitan combinar funcionalidades pequeñas en lógicas más complejas
+
+
+Ventajas de las High Order Functions
+
+- Reduccion de codigo repetitivo
+
+- Mucha mayor legibilidad y expresividad
+
+- Composicion funcional: permite encadenar transformaciones como map().filter().reduce()
+*/
+////////////////
+// Ejemplo 1 //
+// Aceptamos una funcion como argumento
+
+// 1. Aceptando una funcion como argumento. Funcion de alto nivel que acepta una callback
+function funcionAltoNivel(callback) { // Metemos callback como parametro
+    console.log("Ejecutando la funcion de alto nivel");
+    
+    callback(); // Llamada a la funcion callback
 }
 
-// Procesar usuario recibe un nombre y una funcion callback
-function procesarUsuario(nombre, callback) {
-    // Hacemos algo con el nombre
-    callback(nombre);
+function funcionCallback() {
+    console.log("Ejecutando la funcion callback");
 }
 
-// Cuando termina de procesar el nombre, llama a la funcion saludar
-procesarUsuario("Thiago", saludar); // pasamos saludar como argumento
+
+funcionAltoNivel(funcionCallback);
 
 
-
-// Callbacks: Funciones que se pasan como argumentos a otras funciones para ser ejecutadas despues
-
-function procesarDatos(datos, callback) {
-    console.log("Procesando datos");
-    const resultado = datos.toUpperCase();
-    callback(resultado); // Ejecuta la funcion callback
+// 2. Funcion de alto nivel que devuelve una funcion
+function crearSaludo(saludo) {
+    // Devolviendo una nueva funcion
+    return function(nombre) {
+        console.log(`${saludo}, ${nombre}`);
+    }
 }
 
-procesarDatos("hola mundo", (res) => {
-    console.log("Resultado:", res);
+// Crear una funcion saludo
+const saludaHola = crearSaludo("Hola");
+saludaHola("Kevin");
+
+
+// Creando una funcion despedida
+const saludaDespedida = crearSaludo("Chauchis");
+saludaDespedida("Jonathan");
+
+
+// 3. Ejemplo de abstraccion en una HOF
+function ejecutarOperacionArray(array, operacion) {
+    return array.map(operacion)
+}
+
+// Funcion callback que duplica cada elemento en el array
+function dobles(numero) {
+    return numero * 2;
+}
+
+// const numeros = [1, 2, 3, 4, 5];
+const numerosDobles = ejecutarOperacionArray(numeros, dobles);
+console.log(numerosDobles);
+
+
+////////////////////////////////////////////////////////
+// Funciones de orden superior comunes en JavaScript //
+
+// forEach: Recorre todos los elementos de un array y ejecuta una funcion sobre cada uno
+numeros.forEach(function(num) {
+    console.log(num * 2);
 });
+
+
+// map: Crea un nuevo array aplicando una funcion a cada elemento del array original
+const alCuadrado = numeros.map(num => num ** 2);
+console.log(alCuadrado);
+
+
+// filter: Crea un nuevo array con los elementos que cumplen una condicion
+const pares = numeros.filter(n => n % 2 === 0);
+console.log(pares);
+
+
+// reduce: Acumula los valores del array en un solo valor, segun una funcion reductora
+const suma = numeros.reduce((total, actual) =>  total + actual, 0);
+console.log(suma);
+
+
+/* Desgranando un ejemplo de HOF
+
+const cuadrados = numeros.map(n => n * n);
+
+1. map es un metodo de array y tambien es una High Order Function
+
+    - Se llama High Order Function porque recibe como argumento otra funcion
+
+2. esta  funcion que recibe se ejecuta una vez por cada elemento del array
+
+    - A esa funcion que recibe map la llamamos callback
+
+
+3. El callback concretamente es esta funcion
+    n => n * n;
+
+    Es equivalente a escribirlo con function
+
+    function(n) {
+        return n * n;
+    }
+*/
+const cuadrados = numeros.map(n => n * n);
+
+
+// Por dentro map, hace algo parecido a esto
+function miMap(array, callback) {
+
+    const nuevoArray = [];
+
+    for(let i = 0; i < array.length; i++) {
+        nuevoArray.push(callback(array[i], i, array));
+    }
+
+    return nuevoArray;
+}
+
+/* En nuestro caso haria
+
+- Iteracion 1 -> callback(1) -> 1 * 1 = 1
+
+- Iteracion 2 -> callback(2) -> 2 * 2 = 4
+
+Resultado final:
+
+cuadrados = [1, 4, 9, 16, 25]
+
+
+
+Concretamente, el callback en nuestro ejemplo de map es la funcion flecha
+    n => n * n
+
+que map invoca internamente para cada elemento del array
+
+*/
+
+
+// Ejemplo de encadenamiento de HOF (Funciones de Orden Superior)
+const usuarios = [
+    { nombre: "Jonathan", edad: 30 },
+    { nombre: "Mauro", edad: 16 },
+    { nombre: "Rocio", edad: 32 },
+    { nombre: "Thiago", edad: 37 },
+    { nombre: "Arturo", edad: 17 }
+];
+
+const mayoresDeEdad = usuarios
+    .filter(user => user.edad >= 18)
+    .map(user => user.nombre);
+
+console.log(mayoresDeEdad);
+
+
+
+
+
+
 
 
 
@@ -198,180 +559,6 @@ console.log(incrementar());
 
 
 
-/* ===============================
-    Funciones de orden superior
-    High Order Functions
-==================================
-
-Una funcion de orden superior es una funcion que puede hacer al menos una de estas dos cosas
-
-    1. Recibir una o mas funciones como argumento(s)
-    2. Devolver una funcion como resultado
-
-Las funciones de orden superior operan sobre otras funciones, ya sea tomandolas como parametros o retornandolas. 
-
-
-Por que usar funciones de orden superior?
-
-    - Abstraccion: Permiten escribir codigo mas abstracto y reutilizable
-    - Composicion: Facilitan combinar funcionalidades pequeñas en lógicas más complejas
-
-
-Ventajas de las High Order Functions
-
-- Reduccion de codigo repetitivo
-
-- Mucha mayor legibilidad y expresividad
-
-- Composicion funcional: permite encadenar transformaciones como map().filter().reduce()
-*/
-////////////////
-// Ejemplo 1 //
-// Aceptamos una funcion como argumento
-
-// 1. Aceptando una funcion como argumento. Funcion de alto nivel que acepta una callback
-function funcionAltoNivel(callback) { // Metemos callback como parametro
-    console.log("Ejecutando la funcion de alto nivel");
-    
-    callback(); // Llamada a la funcion callback
-}
-
-function funcionCallback() {
-    console.log("Ejecutando la funcion callback");
-}
-
-
-funcionAltoNivel(funcionCallback);
-
-
-// 2. Funcion de alto nivel que devuelve una funcion
-function crearSaludo(saludo) {
-    // Devolviendo una nueva funcion
-    return function(nombre) {
-        console.log(`${saludo}, ${nombre}`);
-    }
-}
-
-// Crear una funcion saludo
-const saludaHola = crearSaludo("Hola");
-saludaHola("Kevin");
-
-
-// Creando una funcion despedida
-const saludaDespedida = crearSaludo("Chauchis");
-saludaDespedida("Jonathan");
-
-
-// 3. Ejemplo de abstraccion en una HOF
-function ejecutarOperacionArray(array, operacion) {
-    return array.map(operacion)
-}
-
-// Funcion callback que duplica cada elemento en el array
-function dobles(numero) {
-    return numero * 2;
-}
-
-const numeros = [1, 2, 3, 4, 5];
-const numerosDobles = ejecutarOperacionArray(numeros, dobles);
-console.log(numerosDobles);
-
-
-////////////////////////////////////////////////////////
-// Funciones de orden superior comunes en JavaScript //
-
-// forEach: Recorre todos los elementos de un array y ejecuta una funcion sobre cada uno
-numeros.forEach(function(num) {
-    console.log(num * 2);
-});
-
-
-// map: Crea un nuevo array aplicando una funcion a cada elemento del array original
-const alCuadrado = numeros.map(num => num ** 2);
-console.log(alCuadrado);
-
-
-// filter: Crea un nuevo array con los elementos que cumplen una condicion
-const pares = numeros.filter(n => n % 2 === 0);
-console.log(pares);
-
-
-// reduce: Acumula los valores del array en un solo valor, segun una funcion reductora
-const suma = numeros.reduce((total, actual) =>  total + actual, 0);
-console.log(suma);
-
-
-/* Desgranando un ejemplo de HOF
-
-const cuadrados = numeros.map(n => n * n);
-
-1. map es un metodo de array y tambien es una High Order Function
-
-    - Se llama High Order Function porque recibe como argumento otra funcion
-
-2. esta  funcion que recibe se ejecuta una vez por cada elemento del array
-
-    - A esa funcion que recibe map la llamamos callback
-
-
-3. El callback concretamente es esta funcion
-    n => n * n;
-
-    Es equivalente a escribirlo con function
-
-    function(n) {
-        return n * n;
-    }
-*/
-const cuadrados = numeros.map(n => n * n);
-
-
-// Por dentro map, hace algo parecido a esto
-function miMap(array, callback) {
-
-    const nuevoArray = [];
-
-    for(let i = 0; i < array.length; i++) {
-        nuevoArray.push(callback(array[i], i, array));
-    }
-
-    return nuevoArray;
-}
-
-/* En nuestro caso haria
-
-- Iteracion 1 -> callback(1) -> 1 * 1 = 1
-
-- Iteracion 2 -> callback(2) -> 2 * 2 = 4
-
-Resultado final:
-
-cuadrados = [1, 4, 9, 16, 25]
-
-
-
-Concretamente, el callback en nuestro ejemplo de map es la funcion flecha
-    n => n * n
-
-que map invoca internamente para cada elemento del array
-
-*/
-
-
-// Ejemplo de encadenamiento de HOF (Funciones de Orden Superior)
-const usuarios = [
-    { nombre: "Jonathan", edad: 30 },
-    { nombre: "Mauro", edad: 16 },
-    { nombre: "Rocio", edad: 32 },
-    { nombre: "Thiago", edad: 37 },
-    { nombre: "Arturo", edad: 17 }
-];
-
-const mayoresDeEdad = usuarios
-    .filter(user => user.edad >= 18)
-    .map(user => user.nombre);
-
-console.log(mayoresDeEdad);
 
 
 
@@ -414,11 +601,11 @@ console.log(nombre, edad);
 
 
 // Destructuring en parametros de funcion
-function saludar({nombre, edad}) {
+function saludo({nombre, edad}) {
     console.log(`Holis ${nombre}, tenés ${edad} años, sos un pibe!`);
 }
 
-saludar(alumno);
+saludo(alumno);
 
 
 // Destructuring de arrays con valores omitidos
@@ -434,6 +621,9 @@ console.log(sobrante);
 
 let {nom, ...otros} = { nom: "Jero", edad: 23, pais: "Argentina" };
 console.log(otros);
+
+
+
 
 
 
@@ -510,6 +700,8 @@ function logArguments(primero, ...resto) {
 }
 
 logArguments("a", "b", "c");
+
+
 
 
 
@@ -602,6 +794,10 @@ setTimeout(() => {
 }, 1000);
 
 
+
+
+
+
 /*==================
     Callback Hell
 ====================
@@ -672,14 +868,20 @@ setTimeout(() => {
 
 
 
-// Ejemplo con Promesas
+
+// Ejemplo con Promesas (sintaxis clasica)
+
 fetch("https://jsonplaceholder.typicode.com/users") // Traemos el choclo JSON de una URL
+
     .then(response => response.json()) // Transformamos el JSON en objetos JavaScript
+
     .then(data => console.table(data)) // Mostrarmos nuestros objetos JavaScript por consola
+
     .catch(error => console.error(error)); // Si hubiera un error, lo mostraria en consola con un formato error
 
 
-// Ejemplo con async/await
+
+// Ejemplo con async/await (sintaxis moderna)
 async function obtenerDatos() {
     try {
 
@@ -699,8 +901,28 @@ async function obtenerDatos() {
     }
 }
 
-
 obtenerDatos();
+
+
+/* EXTRA: En Linux podemos hacer otro tipo de solicitudes para, por ejemplo, descargarnos paginas web enteras, wget y curl
+
+Qué es wget -> Comando de descarga de archivos en internet
+
+Wget es una herramienta de línea de comandos gratuita y de software libre desarrollada por el Proyecto GNU, diseñada para recuperar archivos desde Internet utilizando los protocolos HTTP, HTTPS, FTP y FTPS (desde la versión 1.18)  Es una herramienta no interactiva, lo que significa que puede ejecutarse sin intervención del usuario, lo que la hace ideal para su uso en scripts, tareas programadas (cron) o en entornos sin interfaz gráfica  Su nombre es una combinación de "World Wide Web" y "get", refiriéndose a la acción de obtener archivos  Wget está disponible en múltiples sistemas operativos, incluyendo Linux, macOS y Windows, y es especialmente útil para administradores de sistemas y desarrolladores debido a su capacidad para automatizar descargas, replicar sitios web y manejar descargas complejas  En la mayoría de las distribuciones de Linux, como Debian y Ubuntu, wget viene preinstalado, aunque puede instalarse fácilmente con gestores de paquetes como `apt-get` si no está presente 
+
+
+Ver tabla comparativa en el README! */
+
+
+/* Aplicacion CRUD
+
+C: Create / Crear
+R: Read / Leer
+U: Update / Actualizar
+D: Delete / Eliminar
+*/
+
+
 
 
 
@@ -708,33 +930,205 @@ obtenerDatos();
     Web APIS
 ==================================
 
-API (Application Programming Interface) o Interfaz de Programacion de aplicaciones
+API (Application Programming Interface) o Interfaz de Programacion de Aplicaciones
 
 Una API es un conjunto de funciones y herramientas que usamos para interactuar con algo, sea el navegador, el servidor o una libreria.
 
 
 Una web API, en el contexto del navegador (Firefox, Chrome, ble), una Web API es una funcion o conjunto de funciones que el navegador nos proporaciona para usarlas con JavaScript.
 
-El lenguaje JavaScript tal cual es más plano y limitado, pero el entorno de ejecución nos va a permitir funciones y utilidades extra, para acceder a funcionalidades especiales
+El lenguaje JavaScript tal cual es más plano y limitado, pero el entorno de ejecución nos va a permitir funciones y utilidades extra, para acceder a funcionalidades especiales, como:
 
-- Manipular el DOM, con document.getElementById
-- Esperar un tiempo con setTimeout
-- Hacer peticiones HTTP con fetch
-- Trabajar con audio, video, GPS, etc
+    - document Accede al DOM (HTML) y nos lo proporciona el navegador
 
+    - setTimeout() Ejecuta una funcion despues de un tiempo y el navegador proporciona esa API
 
-- Ojo, fetch es una API, porque no es parte del lenguaje JavaScript "puro"
-- Es una funcion que el navegador le da a JAvaScript para que pueda hacer peticiones a servidores web
-- Por eso decimos que es una web api que el navegador expone
+    - fetch() Hace peticiones HTTP y nos la proporciona el navegador
+
+    - console.log() Muestra informacion por consola, y nos la proporciona el navegador
+
+    - localStorage: Guarda datos en el navegador, y nos la proporciona el navegador
+
+    - Trabajar con audio, video, GPS, etc
 
 
 - JavaScript es el lenguaje
 - Las Web APIs son funciones extra que el navegador le presta a JavaScript para hacer cosas utiles
 - JavaScript usa estas herramientas, pero son externas al lenguaje puro en si
+
+
+Por que fetch es una API?
+    - Ojo, fetch es una API, porque no es parte del lenguaje JavaScript "puro"
+    
+    - Es una funcion que el navegador le da a JavaScript para que pueda hacer peticiones a servidores web
+    
+    - Por eso decimos que es una web api que el navegador expone
+
+
+setTimeout tambien es una API!
+    - setTimeout() no es parte del nucleo de JavaScript, pero el navegador lo agrega como una herramienta para que los desarrolladores lo usen
+
+    - Por eso, cuando usamos setTimeout, realmente estamos usando una API del entorno de ejecucion del navegador (no de JavaScript puro)
+
+
+En resumen:
+
+    - API: Un conjunto de funciones para interactuar con algo
+
+    - Web API: Funciones que el navegador le ofrece a JavaScript
+
+    - fetch(): Web API para hacer peticiones HTTP
+
+    - setTimeout(): Web API para ejecutar codigo con demora
+
+    - JavaScript usa Web APIs, pero no estan dentro del lenguaje sino que las define el navegador
+
+
+// Para chusmear compatibilidad entre navegadores: https://caniuse.com/?search=json
+
+
+
+===============================================
+    Los tipos de Web APIs mas comunes
+===============================================
+
+1. APIs del DOM (Document Object Model)
+Permiten acceder y modificar el HTML y CSS de la pagina
+Manipulacion de elemntos, eventos, clases, estilos, etc
+
+    - document.querySelector()
+    - element.addEventListener()
+    - classList.add()
+
+
+
+
+2. APIs de red
+Permiten comunicarnos con servidores o cargar recursos
+Peticiones HTTP, chats, notificaciones en timpo real
+
+    - fetch() la mas moderna
+    - XMLHttpRequest antigua
+    - WebSocket para comunicion en tiempo real
+    - EventSource (Eventos enviados por el servidor)
+
+
+
+
+3. APIs de almacenamiento
+Guardar informacion en el navegador
+Guardar preferencias, datos de sesion, apps sin conexion
+
+    - localStorage
+    - sessionStorage
+    - indexedDB
+    - Cookies (mediante document.cookie)
+
+
+
+4. Timers
+Ejecutar funciones luego de un cierto tiempo
+Retrasos, animaciones, etc
+
+    - setTimeout()
+    - setInterval()
+    - clearTimeout() y clearInterval()
+
+
+
+5. APIs de Dispositivos y Multimedia
+Interaccion con hardware o medios
+Apps moviles, camara, permisos, grabaciones, notificaciones
+
+    - navigator.geolocation: para el GPS
+    - MediaDevices.getUserMedia(): microfono y camara
+    - Notificacion: Notificaciones del sistema
+    - Battery API, Clipboard API
+
+
+
+6. APIs de interfaz grafico
+Controlan animaciones, graficos y visualizacion
+Juegos, visualizaciones, graficos dinamicos
+    - Canvas API
+    - WebGL
+    - Fullscreen API
+    - Screen Orientation API
+
+
+
+7. APIs de Workers y ejecucion
+Permiten ejecutar codigo en segundo plano
+Procesos paralelos, apps progresivas sin bloquear la interfaz
+    - Web Workers
+    - Service Workers
+    - Shared Workers
 */
 ```
 
 ![Callback hell Hadouken](https://blog.da2k.com.br/uploads/2015/03/hadouken.jpg)
+
+
+## Diferencia entre `curl` y `wget` en Linux
+
+`curl` y `wget` son dos herramientas esenciales en Linux para transferir datos desde/hacia servidores, pero están diseñadas con enfoques distintos. **`wget` es ideal para descargas simples, recursivas y automatizadas**, especialmente de sitios web completos, gracias a su facilidad de uso y manejo automático de redirecciones y reintentos. Por otro lado, **`curl` es más versátil y potente**, actuando como un cliente multiprotocolo que permite interactuar con APIs, enviar datos mediante POST, personalizar cabeceras y trabajar con más de 25 protocolos, lo que lo convierte en la opción preferida para tareas avanzadas de red y desarrollo.
+
+Aunque ambas pueden descargar archivos vía HTTP/HTTPS/FTP, sus diferencias clave radican en su propósito: **`wget` se centra en la descarga robusta y automatizada**, mientras que **`curl` destaca en la interacción flexible con servicios en red**.
+
+## Comparación detallada: curl vs wget
+
+La siguiente tabla resume las principales diferencias funcionales entre ambas herramientas:
+
+| Característica | `curl` | `wget` |
+|----------------|--------|--------|
+| **Propósito principal** | Transferencia de datos bidireccional, interacción con APIs | Descarga de archivos, especialmente masiva y recursiva |
+| **Soporte de protocolos** | Más de 25: HTTP(S), FTP(S), SCP, SFTP, SMTP, IMAP, POP3, LDAP, MQTT, TELNET, etc. | Principalmente HTTP, HTTPS, FTP |
+| **Descarga recursiva** | No soportada | Sí, permite descargar sitios completos (`--mirror`) |
+| **Salida por defecto** | Muestra el contenido en `stdout` (terminal) | Guarda automáticamente el archivo en disco |
+| **Resumen de descargas** | Requiere `-C -` | Automático con `-c` |
+| **Personalización de cabeceras HTTP** | Sí, con `-H` | Limitado |
+| **Envío de datos (POST, PUT, etc.)** | Sí, ideal para APIs (`-X POST`, `-d`) | Soporta POST, pero menos flexible |
+| **Autenticación** | Soporta múltiples métodos: Basic, Digest, NTLM, OAuth, AWS, etc. | Básica (Basic, Digest) |
+| **Uso de proxies** | Sí, incluyendo SOCKS4/5 y HTTPS a través de proxy | Solo HTTP/HTTPS, sin SOCKS |
+| **Descargas en paralelo** | Sí, con `--parallel` (versiones recientes) | No |
+| **Descompresión automática** | Sí (gzip, brotli, zstd, deflate) | No |
+| **Licencia** | MIT (más permisiva) | GPL v3 |
+| **Preinstalado en sistemas modernos** | Sí (macOS, Windows 10/11) | Generalmente solo en Linux |
+| **Biblioteca subyacente** | `libcurl` (usada en muchos programas) | No tiene biblioteca, solo CLI |
+
+
+
+## ¿Cuándo usar cada herramienta?
+
+### Usa `wget` cuando:
+- Necesitas **descargar un sitio web completo** (mirroring).
+- Quieres **automatizar descargas con `cron`**.
+- Trabajas con **conexiones inestables** (reintentos automáticos).
+- Prefieres comandos simples y directos.
+- Solo necesitas **HTTP, HTTPS o FTP**.
+
+**Ejemplo**:  
+```bash
+wget --mirror --convert-links https://ejemplo.com
+```
+
+### Usa `curl` cuando:
+- Debes **interactuar con una API REST**.
+- Necesitas **enviar datos con POST, PUT, etc.**.
+- Requieres **personalizar cabeceras o autenticación avanzada**.
+- Trabajas con **múltiples protocolos** (SMTP, IMAP, SFTP, etc.).
+- Quieres **procesar la salida con otras herramientas** (porque por defecto imprime en `stdout`).
+
+**Ejemplo**:  
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{"user":"test"}' https://api.ejemplo.com/login
+```
+
+
+
+## Conclusión
+En resumen, **`wget` es la herramienta perfecta para descargas simples, recursivas y confiables**, especialmente en entornos de automatización. En cambio, **`curl` es el Swiss Army Knife de las transferencias de datos**, indispensable para desarrollo, pruebas de APIs y tareas que requieren flexibilidad y control detallado. La elección depende del caso de uso: si necesitas bajar un sitio entero, ve por `wget`; si estás interactuando con servicios web o APIs, `curl` es tu mejor aliado.
+
 
 ---
 
