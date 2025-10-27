@@ -11,6 +11,23 @@
 - Es ligero y flexible
 - Cuenta con un gran ecosistema de modulos y herramientas con [npm](https://www.npmjs.com/)
 
+---
+
+## Anotaciones
+#### Prox clase, trabajar con git en ramas, crear vista para consumir cada endpoint y CORS
+
+- [Chusmear codigos de estado HTTP](https://http.cat/)
+- **Recomendacion**: Ir avanzando con el TP, adaptando el parcial para consumir los datos de aca
+    - [API Rest publica de tienda de productos](https://fakestoreapi.com/products/)
+
+- [Lenguaje Markdown](https://es.wikipedia.org/wiki/Markdown)
+
+#### Recomendacion para nombrar los repos del tp
+- `grupoXIProgra3ntegrador25Cuatri2_back`
+- `grupoXProgra3Integrador25Cuatri2_front`
+
+---
+
 
 
 ## **1 / Setup e instalacion**
@@ -82,7 +99,57 @@ DB_PASSWORD="abc123."
 ---
 
 ## 2 / Estructura de directorios y conexion a la BBDD
+- Creamos las carpetas y los archivos `src/api/config/environments.js` y `src/api/database/db.js`
 
+- en `src/api/config/environments.js`
+```js
+import dotenv from "dotenv"; // Importamos el modulo dotenv
+
+dotenv.config(); // Cargamos las variables de entorno desde el archivo.env
+
+// Vamos a exportar esta informacion del .env
+export default {
+    port: process.env.PORT || 3500,
+    database: {
+        host: process.env.DB_HOST,
+        name: process.env.DB_NAME,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD
+    }   
+}
+```
+
+- [Documentacion mysql2](https://sidorares.github.io/node-mysql2/docs/documentation)
+- en `src/api/database/db.js`
+```js
+// Importamos el modulo que instalamos previamente para conectarnos a la BBDD mysql
+import mysql from "mysql2/promise";
+
+// Importamos el archivo de environments
+import environments from "../config/environments.js";
+
+const { database } = environments;
+
+
+const connection = mysql.createPool({
+    host: database.host,
+    database: database.name,
+    user: database.user,
+    password: database.password
+});
+
+export default connection;
+```
+
+- Un pool de conexiones es un conjunto de conexiones activas y reutilizables a la BBDD
+- En lugar de abrir y cerrar una nueva conexion cada vez que hacemos una consulta cada vez que hacemos una consulta, el pool:
+    - Mantiene abiertas varias conexiones
+    - Las reutiliza para distintas consultas
+    - Mejora el rendimiento y eficacia del servidor
+    - Controla cuantas conexiones pueden usarse al mismo tiempo
+    - Evita crear y destruir conexiones constantemente
+    - Reduce la carga en la BBDD
+    - Mejora la velocidad y capacidad de respuesta de la app
 
 ---
 
@@ -298,24 +365,4 @@ app.listen(puerto, () => {
 4. Escuchamos en un puerto: Nuestro servidor esta escuchando en el puerto 3000 y listo para aceptar conexiones
 
 
----
-
-## Anotaciones
-
-
-- [Chusmear codigos de estado HTTP](https://http.cat/)
-- [Chusmear compatibilidad entre navegadores](https://caniuse.com/?search=json)
-- **Recomendacion**: Ir avanzando con el TP, adaptando el parcial para consumir los datos de aca
-    - [API Rest publica de tienda de productos](https://fakestoreapi.com/products/)
-
-- TO DO:
-- *Esperemos a terminar JS VIII, Servidor Node.js y servidor Express.js y a ver la leccion protocolo HTTP y arquitectura cliente servidor*
-    - **Explicar Event Loop, Call Stack (Pila de ejecucion) Callback Queue**
-
-- **Ver lenguaje Markdown y manejo de git**
-- [Lenguaje Markdown](https://es.wikipedia.org/wiki/Markdown)
-
-#### Recomendacion para nombrar los repos del tp
-- `grupoXIProgra3ntegrador25Cuatri2_back`
-- `grupoXProgra3Integrador25Cuatri2_front`
 
