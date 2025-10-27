@@ -16,7 +16,12 @@ const puerto = 3000;
 
 app.listen(puerto, () => {
     console.log(`Servidor Express corriendo en el puerto ${puerto}`);
-})
+});
 
-// TO DO, terminar de explicar este servidor
-// #### TO DO, pendiente, terminar de explicar `package.json` (pag 8)
+/*
+1. Instalamos Express con `npm i express` y lo importamos
+2. Creamos una aplicacion: Llamamos a la funcion `express()` que devuelve una instancia de aplicacion
+3. Definimos una ruta: Usamos `app.get()` para definir que hacemos cuando alguien visita la raiz `"/"` de nuestro servidor. Respondemos con un simple *"Hola mundo desde Express.js"*
+4. Escuchamos en un puerto: Nuestro servidor esta escuchando en el puerto 3000 y listo para aceptar conexiones
+
+*/

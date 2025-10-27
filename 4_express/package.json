@@ -4,11 +4,12 @@
   "description": "Servidor Express.js",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["node", "express", "servidor"],
+  "author": "Cosme Fulanito <cosme@fulanito.com>",
+  "license": "MIT",
   "type": "commonjs",
   "dependencies": {
     "express": "^5.1.0"
