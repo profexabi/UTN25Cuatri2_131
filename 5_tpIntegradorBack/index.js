@@ -5,14 +5,26 @@ import express from "express"; // Importamos el framework Express
 const app = express();
 import environments from "./src/api/config/environments.js"; // Importamos las variables de entorno
 import connection from "./src/api/database/db.js"; // Importamos la conexion a la BBDD
-
 const PORT = environments.port;
+import cors from "cors"; // Importamos el modulo CORS
+
+
+/*===================
+    Middlewares
+===================*/
+app.use(cors()); // Middleware CORS basico que permite todas las solicitudes
+
+// TO DO, probar a comentar esto cuando hagamos el endpoint POST
+app.use(express.json()); // Middleware para parsear JSON en el body
+
 
 
 
 /*======================
     Endpoints
 ======================*/
+
+// Get products -> Traer todos los productos
 app.get("/products", async (req, res) => {
     try {
         
@@ -53,7 +65,35 @@ app.get("/products", async (req, res) => {
     }
 });
 
+// TO DO, Optimizacion sacando SELECT * y eligiendo solo los campos que queremos mostrar
+
+
+// Get product by id -> Consultar producto por su id
+app.get("/products/:id", async (req, res) => {
+    try {
+
+        let { id } = req.params; // Esto nos permite obtener el valor numerico despues de products /products/2
+
+        let sql = `SELECT * FROM products where id = ?`;
+        const [rows] = await connection.query(sql, [id]); // El id reemplaza nuestro ?
+
+        res.status(200).json({
+            payload: rows
+        });
+
+
+    } catch (error) {
+        console.error("Error obteniendo producto con id", error.message);
+
+        res.status(500).json({
+            error: "Error interno al obtener un producot con id"
+        })
+    }
+});
+
+// TO DO, repasar endpoint y la conexion con la vista consultar.html
+
 
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en el puerto ${PORT}`);
-})
+});

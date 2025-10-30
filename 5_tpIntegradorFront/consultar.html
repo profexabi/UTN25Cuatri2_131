@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tp Integrador Front</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.css'>
+    
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <a href="index.html">
+                    <li>Ver</li>
+                </a>
+                <a href="consultar.html">
+                    <li>Consultar id</li>
+                </a>
+                <a href="crear.html">
+                    <li>Crear</li>
+                </a>
+                <a href="modificar.html">
+                    <li>Modificar</li>
+                </a>
+                <a href="eliminar.html">
+                    <li>Eliminar</li>
+                </a>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <h1>Consultar producto por id</h1>
+
+        <form id="getProduct-form">
+            <label for="idProd">Id del producto</label>
+            <input type="number" name="idProd" id="idProd" required>
+
+            <input type="submit" value="Consultar producto">
+        </form>
+
+        <hr>
+        <section id="contenedor-productos">
+            <ul id="lista-productos"></ul>
+        </section>
+    </main>
+
+    <script>
+        // Seleccion de elementos del DOM
+        // let contenedorProductos = document.getElementById("contenedor-productos");
+        let listaProductos = document.getElementById("lista-productos");
+        let getProductForm = document.getElementById("getProduct-form");
+        let url = "http://localhost:3000";
+
+
+        getProductForm.addEventListener("submit", async (event) => {
+            
+            event.preventDefault(); // Prevenimos el envio por defecto del formulario
+
+            // Tenemos que obtener los datos del formulario, por tanto, vamos a crear un objeto FormData a partir de los datos del formulario
+            let formData = new FormData(event.target); //Creamos un nuevo objeto FormData a partir de los datos del formulario
+
+            console.log(formData); // FormData { idProd → "2" }
+            // Ojo, esto no se muestra en navegadores basados en Chromium
+
+            // Transformamos a objetos JS los valores de FormData
+            let data = Object.fromEntries(formData.entries());
+            console.log(data); // {idProd: '2'}
+
+            let idProd = data.idProd; // Ahora ya tenemos guardado en una variable el valor del campo del formulario
+            console.log(idProd);
+
+            console.log(`Realizando una peticion GET a la url ${url}/products/${idProd}`);
+            
+            let response = await fetch(`${url}/products/${idProd}`);
+
+            let datos = await response.json();
+
+             // Extraemos de la respuesta payload, el primer resultado que contiene el objeto que consultamos
+            let producto = datos.payload[0];
+            console.log(producto);
+
+            let htmlProducto = `
+                <li class="li-producto">
+                        <img src="${producto.image}" alt="${producto.name}">
+                        <p>Id: ${producto.id} / Nombre: ${producto.name} / <strong>Precio: ${producto.price}</strong></p>
+                </li>
+            `;
+
+            listaProductos.innerHTML = htmlProducto;
+
+
+
+    
+/*==========================
+        Que es FormData?
+============================
+
+FormData es una interfaz nativa de JavaScript que permite crear un conjunto de pares clave-valor 
+que representan los campos de un formulario HTML y sus respectivos valores.
+
+Esta clase se utiliza principalmente para capturar y enviar datos de formularios, 
+ya sea mediante métodos como fetch o XMLHttpRequest, 
+y se encarga de formatear los datos correctamente como multipart/form-data, 
+estableciendo automáticamente los encabezados necesarios para el envío
+*/
+        });
+    </script>
+</body>
+</html>
