@@ -66,7 +66,7 @@
 
             // Transformamos a objetos JS los valores de FormData
             let data = Object.fromEntries(formData.entries());
-            console.log(data); // {idProd: '2'}
+            console.log(data); // { idProd: '2' }
 
             let idProd = data.idProd; // Ahora ya tenemos guardado en una variable el valor del campo del formulario
             console.log(idProd);
@@ -83,7 +83,7 @@
 
             let htmlProducto = `
                 <li class="li-producto">
-                        <img src="${producto.image}" alt="${producto.name}">
+                        <img class="producto-img" src="${producto.image}" alt="${producto.name}">
                         <p>Id: ${producto.id} / Nombre: ${producto.name} / <strong>Precio: ${producto.price}</strong></p>
                 </li>
             `;

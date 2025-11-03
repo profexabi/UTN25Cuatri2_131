@@ -2,9 +2,10 @@
     Importaciones
 ======================*/
 import express from "express"; // Importamos el framework Express
-const app = express();
-import environments from "./src/api/config/environments.js"; // Importamos las variables de entorno
+const app = express(); // Inicializamos express en la variable app, que contendra todos los metodos
+
 import connection from "./src/api/database/db.js"; // Importamos la conexion a la BBDD
+import environments from "./src/api/config/environments.js"; // Importamos las variables de entorno
 const PORT = environments.port;
 import cors from "cors"; // Importamos el modulo CORS
 
@@ -23,6 +24,13 @@ app.use(express.json()); // Middleware para parsear JSON en el body
 /*======================
     Endpoints
 ======================*/
+
+app.get("/dashboard", (req, res) => {
+    // Devolvemos una respuesta en texto plano desde la url /dashboard
+    // Posteriormente desde esta url devolveremos una pagina HTML de la carpeta views
+    res.send("Hola desde la raiz del TP Integrador");
+});
+
 
 // Get products -> Traer todos los productos
 app.get("/products", async (req, res) => {
@@ -55,13 +63,12 @@ app.get("/products", async (req, res) => {
         });
 
 
-
     } catch(error) {
         console.error(error);
 
         res.status(500).json({
             message: "Error interno al obtener productos"
-        })
+        });
     }
 });
 
@@ -72,8 +79,11 @@ app.get("/products", async (req, res) => {
 app.get("/products/:id", async (req, res) => {
     try {
 
+        // el :id se extrae con el objeto request -> req.params.id
         let { id } = req.params; // Esto nos permite obtener el valor numerico despues de products /products/2
 
+
+        // Los ? representan los placeholders, se usan por temas de seguridad para prevenir inyecciones SQL
         let sql = `SELECT * FROM products where id = ?`;
         const [rows] = await connection.query(sql, [id]); // El id reemplaza nuestro ?
 
@@ -86,12 +96,26 @@ app.get("/products/:id", async (req, res) => {
         console.error("Error obteniendo producto con id", error.message);
 
         res.status(500).json({
-            error: "Error interno al obtener un producot con id"
+            error: "Error interno al obtener un producto con id"
         })
     }
 });
 
-// TO DO, repasar endpoint y la conexion con la vista consultar.html
+
+// Crear producto
+app.post("/products", async (req, res) => {
+    try {
+        
+
+    } catch(error) {
+        console.error("Error interno del servidor");
+
+        res.status(500).json({
+            message: "Error interno del servidor",
+            error: error.message
+        });
+    }
+});
 
 
 app.listen(PORT, () => {

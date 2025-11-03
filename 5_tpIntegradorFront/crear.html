@@ -30,14 +30,77 @@
             </ul>
         </nav>
     </header>
+
     <main>
         <h1>Crear producto</h1>
+        
+        <!-- Formulario que va a enviar nuestros datos al endpoint /products-->
+        <form id="altaProducts-container">
+
+            <label for="nameProd">Nombre</label>
+            <input type="text" name="name" id="nameProd" required>
+
+            <label for="imageProd">Imagen</label>
+            <input type="text" name="image" id="imageProd" required>
+
+            <label for="priceProd">Precio</label>
+            <input type="number" name="price" id="priceProd" required>
+
+            <label for="categoryProd">Categoria</label>
+            <select name="category" id="categoryProd" required>
+                <option value="food">comida</option>
+                <option value="drink">bebida</option>
+            </select>
+
+            <input type="submit" value="Crear producto">
+        </form>
+
         <hr>
         <section id="contenedor-productos"></section>
     </main>
 
     <script>
+        let altaProducts_container = document.getElementById("altaProducts-container");
 
+        altaProducts_container.addEventListener("submit", (event) => {
+
+            event.preventDefault(); // Evitamos el envio por defecto del formulario
+
+            console.log(event.target);
+            /* event.target devuelve el formulario HTML que activo el evento
+
+            <form id="altaProducts-container">
+
+                <label for="nameProd">Nombre</label>
+                <input type="text" name="name" id="nameProd" required="">
+
+                <label for="imageProd">Imagen</label>
+                <input type="text" name="image" id="imageProd" required="">
+
+                <label for="priceProd">Precio</label>
+                <input type="number" name="price" id="priceProd" required="">
+
+                <label for="categoryProd">Categoria</label>
+                <select name="category" id="categoryProd" required="">
+                    <option value="food">comida</option>
+                    <option value="drink">bebida</option>
+                </select>
+
+                <input type="submit" value="Crear producto">
+            </form>
+            */
+
+            // Guardamos toda la informacion de nuestro formulario en el objeto nativo FormData
+            let formData = new FormData(event.target);
+
+            // Esto no deberia consologuearse en producccion 
+            console.log(formData); // Esto no se ve en navegadores basados en Chromium
+
+            // Transformamos la informacion del objeto FormData en un objeto JavaScript normal
+            let data = Object.fromEntries(formData.entries());
+
+            console.log(data);
+        });
     </script>
 </body>
 </html>

@@ -1,9 +1,13 @@
 /*===============
     header
 ================*/
+ul {
+    padding-left: 0;
+}
+
 nav ul {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;    
 }
 
 nav li {
@@ -19,8 +23,13 @@ nav li {
     justify-content: space-between;
 }
 
+#lista-productos {
+    width: 100%;
+}
+
 .li-producto {
-    
+    display: flex;
+    justify-content: space-between;
 }
 
 .card-producto {
@@ -31,8 +40,9 @@ nav li {
     align-items: center;
     height: 250px;
     margin: 2px;
+    text-align: center;
 }
 
-.card-producto img {
-    width: 100px;
+.producto-img {
+    width: 80px;
 }

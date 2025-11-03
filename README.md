@@ -2,7 +2,7 @@
 
 # Guia Express :books:
 
-`Express.js` es un framework web apra Node.js que nos permite construir servidores y aplicaciones web de forma sencilla y rapida
+`Express.js` es un framework web para Node.js que nos permite construir servidores y aplicaciones web de forma sencilla y rapida
 
 - Es minimalista, está diseñado para facilitar la creación de servidores web
 - Nos permite crear rutas de forma simplificada
