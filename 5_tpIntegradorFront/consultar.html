@@ -73,6 +73,7 @@
 
             console.log(`Realizando una peticion GET a la url ${url}/products/${idProd}`);
             
+            // Enviamos en una peticion GET el id pegado a la url
             let response = await fetch(`${url}/products/${idProd}`);
 
             let datos = await response.json();

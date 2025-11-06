@@ -61,34 +61,14 @@
 
     <script>
         let altaProducts_container = document.getElementById("altaProducts-container");
+        let url = "http://localhost:3000";
 
-        altaProducts_container.addEventListener("submit", (event) => {
+        altaProducts_container.addEventListener("submit", async (event) => {
 
             event.preventDefault(); // Evitamos el envio por defecto del formulario
 
             console.log(event.target);
-            /* event.target devuelve el formulario HTML que activo el evento
-
-            <form id="altaProducts-container">
-
-                <label for="nameProd">Nombre</label>
-                <input type="text" name="name" id="nameProd" required="">
-
-                <label for="imageProd">Imagen</label>
-                <input type="text" name="image" id="imageProd" required="">
-
-                <label for="priceProd">Precio</label>
-                <input type="number" name="price" id="priceProd" required="">
-
-                <label for="categoryProd">Categoria</label>
-                <select name="category" id="categoryProd" required="">
-                    <option value="food">comida</option>
-                    <option value="drink">bebida</option>
-                </select>
-
-                <input type="submit" value="Crear producto">
-            </form>
-            */
+            //event.target devuelve el formulario HTML que activo el evento
 
             // Guardamos toda la informacion de nuestro formulario en el objeto nativo FormData
             let formData = new FormData(event.target);
@@ -97,9 +77,42 @@
             console.log(formData); // Esto no se ve en navegadores basados en Chromium
 
             // Transformamos la informacion del objeto FormData en un objeto JavaScript normal
-            let data = Object.fromEntries(formData.entries());
+            let data = Object.fromEntries(formData.entries()); // Nuestro objeto ya esta listo para enviarse previo parseo a JSON
 
-            console.log(data);
+            /* Ahora ya le podemos meter en el cuerpo de la peticion HTTP Post, este objeto con los datos del formulario en JSON
+            {
+                "name":"faina",
+                "image":"https://www.lanacion.com.ar/resizer/v2/fain-G5ZYOIATCNALHJPHQVNTPXRDOM.jpg",
+                "price":"150",
+                "category":"food"
+            }
+            */
+            try {
+                // En peticiones distintas a GET, tenemos que especificar mas informacion en un parametro de opciones
+                let response = await fetch(`${url}/products`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Recordemos que el catch en este try solo captura errores de red
+                if(response.ok) {
+                    console.log(response);
+
+                    let result = await response.json();
+                    console.log(result.message);
+                    alert(result.message)
+                }
+
+
+
+            } catch(error) { // El catch solo captura errores de red
+                console.error("Error al enviar los datos: ", error);
+                alert("Error al procesar la solicitud");
+            }
+            
         });
     </script>
 </body>

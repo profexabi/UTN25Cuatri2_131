@@ -7,18 +7,31 @@ const app = express(); // Inicializamos express en la variable app, que contendr
 import connection from "./src/api/database/db.js"; // Importamos la conexion a la BBDD
 import environments from "./src/api/config/environments.js"; // Importamos las variables de entorno
 const PORT = environments.port;
+
 import cors from "cors"; // Importamos el modulo CORS
 
 
 /*===================
     Middlewares
-===================*/
-app.use(cors()); // Middleware CORS basico que permite todas las solicitudes
+=====================
+- Los middlewares son basicamente funciones que se ejecutan entre la peticion req y la respuesta res
 
-// TO DO, probar a comentar esto cuando hagamos el endpoint POST
+- La idea de los middlewares es no repetir instrucciones por cada endpoint
+
+- Estos son middlewares de aplicacion -> se aplican a todas las peticiones
+*/
+app.use(cors()); // Middleware CORS basico que permite todas las solicitudes
 app.use(express.json()); // Middleware para parsear JSON en el body
 
+// Logger -> Vamos a registrar por consola cada peticion que se produjo
+app.use((req, res, next) => {
+    console.log(`[${new Date().toLocaleString()}]  ${req.method}  ${req.url}`);
+    // Si no llamamos a next, la conexion se queda trabada aca, next permite continuar procesando la operacion
+    next(); 
+});
 
+// Tendremos tambien middlewares de ruta -> se aplican a ciertas url
+// TO DO, crear middleware de ruta
 
 
 /*======================
@@ -31,7 +44,16 @@ app.get("/dashboard", (req, res) => {
     res.send("Hola desde la raiz del TP Integrador");
 });
 
+/* CRUD (Create Read Update Delete)
 
+    - CREATE -> POST
+    - READ -> GET
+    - UPDATE -> PUT
+    - DELETE -> DELETE
+*/
+
+////////////////
+// READ -> GET
 // Get products -> Traer todos los productos
 app.get("/products", async (req, res) => {
     try {
@@ -55,7 +77,7 @@ app.get("/products", async (req, res) => {
 
         const sql = `SELECT * FROM products`;
         const [rows] = await connection.query(sql);
-        console.log(rows);
+        // console.log(rows);
         
         res.status(200).json({
             payload: rows,
@@ -72,9 +94,10 @@ app.get("/products", async (req, res) => {
     }
 });
 
-// TO DO, Optimizacion sacando SELECT * y eligiendo solo los campos que queremos mostrar
 
 
+////////////////
+// READ -> GET
 // Get product by id -> Consultar producto por su id
 app.get("/products/:id", async (req, res) => {
     try {
@@ -82,6 +105,9 @@ app.get("/products/:id", async (req, res) => {
         // el :id se extrae con el objeto request -> req.params.id
         let { id } = req.params; // Esto nos permite obtener el valor numerico despues de products /products/2
 
+        /* Si enviara este valor con post, lo recogeria asi:
+        let { id } = req.body;
+        */
 
         // Los ? representan los placeholders, se usan por temas de seguridad para prevenir inyecciones SQL
         let sql = `SELECT * FROM products where id = ?`;
@@ -102,18 +128,108 @@ app.get("/products/:id", async (req, res) => {
 });
 
 
+///////////////////
+// CREATE -> POST
 // Crear producto
 app.post("/products", async (req, res) => {
     try {
-        
+        const { name, image, category, price } = req.body;
+        // Aca imprimimos lo que enviamos desde el form que previamente se parseo gracias al middleware -> express.json()
+        console.log(req.body); 
 
-    } catch(error) {
+        // Los placeholders ?, evitan inyecciones SQL para evitar ataques de este tipo
+        let sql = "INSERT INTO products (name, image, category, price) VALUES (?, ?, ?, ?)";
+
+        // Le enviamos estos valores a la BBDD
+        let [rows] = await connection.query(sql, [name, image, category, price]);
+
+        // Devolvemos una respuesta 201 "Created"
+        res.status(201).json({
+            message: "Producto creado con exito"
+        });
+
+
+    } catch (error) {
         console.error("Error interno del servidor");
 
         res.status(500).json({
             message: "Error interno del servidor",
             error: error.message
         });
+    }
+});
+
+
+///////////////////
+// UPDATE -> PUT
+// Actualizar un producto
+app.put("/products", async (req, res) => {
+    try {
+        /*
+        "id": 4,
+        "name": "hamburguesa pollo a la parrilla",
+        "image": "https://burgernj.com/wp-content/uploads/2021/05/Grilled-Chicken-Burger_.jpg",
+        "category": "food",
+        "price": "1500.00",
+        "active": 1
+      */
+        let { id, name, image, category, price, active } = req.body;
+
+        let sql = `
+            UPDATE products
+            SET name = ?, image = ?, price = ?, category = ?
+            WHERE id = ?
+        `;
+
+        let [result] = await connection.query(sql, [name, image, price, category, id]);
+        console.log(result);
+
+        res.status(200).json({
+            message: "Producto actualizado correctamente"
+        });
+        
+
+    } catch (error) {
+        console.error("Error al actualizar el producto: ", error);
+
+        res.status(500).json({
+            message: "Error interno del servidor",
+            error: error.message
+        })
+    }
+});
+
+
+
+////////////////
+// DELETE -> DELETE
+// Eliminar producto
+app.delete("/products/:id", async (req, res) => {
+    try {
+        let { id } = req.params;
+
+        // Opcion 1: Borrado normal
+        let sql = "DELETE FROM products WHERE id = ?";
+
+        // Opcion 2: Baja logica
+        // let sql2 = "UPDATE products set active = 0 WHERE id = ?";
+
+        let [result] = await connection.query(sql, [id]);
+        console.log(result);
+        // affectedRows: 1 -> Nos indica que hubo una fila que fue afectada
+
+        return res.status(200).json({
+            message: `Producto con id ${id} eliminado correctamente`
+        });
+
+
+    } catch (error) {
+        console.log(`Error al eliminar un producto con id ${id}: `, error);
+
+        res.status(500).json({
+            message: `Error al eliminar un producto con id ${id}`,
+            error: error.message
+        })
     }
 });
 

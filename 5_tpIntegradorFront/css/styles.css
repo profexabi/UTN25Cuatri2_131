@@ -10,7 +10,7 @@ nav ul {
     justify-content: space-between;    
 }
 
-nav li {
+li {
     list-style-type: none;
 }
 
@@ -25,11 +25,20 @@ nav li {
 
 #lista-productos {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 
 .li-producto {
     display: flex;
     justify-content: space-between;
+    width: 70%;
+}
+
+.li-botonera {
+    width: 25%;
+    display: flex;
+    align-items: center;
 }
 
 .card-producto {
