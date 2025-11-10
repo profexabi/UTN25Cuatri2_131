@@ -35,7 +35,7 @@
         <h1>Crear producto</h1>
         
         <!-- Formulario que va a enviar nuestros datos al endpoint /products-->
-        <form id="altaProducts-container">
+        <form action="/products" method="post" id="altaProducts-container">
 
             <label for="nameProd">Nombre</label>
             <input type="text" name="name" id="nameProd" required>
@@ -102,7 +102,7 @@
                     console.log(response);
 
                     let result = await response.json();
-                    console.log(result.message);
+                    console.log(result);
                     alert(result.message)
                 }
 

@@ -43,12 +43,13 @@
     async function obtenerProductos() {
         try {
             let response = await fetch(`${url}/products`);
+            console.log(response);
 
             console.log(`Solicitud fetch GET a ${url}/products`);
 
             let data = await response.json();
-
             console.log(data);
+            
             let productos = data.payload;
             console.log(productos);
 

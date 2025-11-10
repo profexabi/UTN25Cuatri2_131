@@ -55,6 +55,7 @@ app.get("/dashboard", (req, res) => {
 ////////////////
 // READ -> GET
 // Get products -> Traer todos los productos
+// Similiar al addEventListener, porque se ejecuta constantemente esperando una accion para ejecutar una fucion -> elemento.addEventListener("click", () => {})
 app.get("/products", async (req, res) => {
     try {
         
@@ -75,9 +76,9 @@ app.get("/products", async (req, res) => {
             `active` TINYINT(1) NOT NULL
         ]*/
 
+        // Optimizacion 1: Seleccionar solamente los campos necesarios -> name, image, category, price porque es la unica informacion que necesita ver el cliente
         const sql = `SELECT * FROM products`;
         const [rows] = await connection.query(sql);
-        // console.log(rows);
         
         res.status(200).json({
             payload: rows,
@@ -86,8 +87,10 @@ app.get("/products", async (req, res) => {
 
 
     } catch(error) {
-        console.error(error);
+        // Este console.log muestra en la consola del servidor
+        console.error("Error al obtener productos", error);
 
+        // Esta es la respuesta que le devolvemos al cliente, para verla como JSON
         res.status(500).json({
             message: "Error interno al obtener productos"
         });
@@ -105,6 +108,14 @@ app.get("/products/:id", async (req, res) => {
         // el :id se extrae con el objeto request -> req.params.id
         let { id } = req.params; // Esto nos permite obtener el valor numerico despues de products /products/2
 
+        // Optimizacion 1: Validacion de parametros antes de acceder a la BBDD para evitar hacer una query si el id no es valido
+        // Esta logica luego la hara un middleware validateId -> para EVITAR tener que repetir este codigo 
+        if(!id || isNaN(Number(id))) {
+            return res.status(400).json({
+                message: "El id del producto debe ser un numero valido"
+            });
+        }
+
         /* Si enviara este valor con post, lo recogeria asi:
         let { id } = req.body;
         */
@@ -112,6 +123,17 @@ app.get("/products/:id", async (req, res) => {
         // Los ? representan los placeholders, se usan por temas de seguridad para prevenir inyecciones SQL
         let sql = `SELECT * FROM products where id = ?`;
         const [rows] = await connection.query(sql, [id]); // El id reemplaza nuestro ?
+
+
+        // Hacemos la consulta, y tenemos el resultado en la variable rows
+        // Optimizacion 2: Comprobamos que existe el producto con ese id
+        if(rows.length === 0) {
+            console.log("Error, no existe producto con ese id");
+
+            return res.status(404).json({
+                message: `No se encontro producto con id ${id}`
+            });
+        }
 
         res.status(200).json({
             payload: rows
@@ -137,15 +159,25 @@ app.post("/products", async (req, res) => {
         // Aca imprimimos lo que enviamos desde el form que previamente se parseo gracias al middleware -> express.json()
         console.log(req.body); 
 
+        // Optimizacion 1: Validacion datos de entrada
+        if(!name || !image || !category || !price) {
+            return res.status(400).json({
+                message: "Datos invalidos, asegurate de enviar todos los campos del formulario"
+            });
+            // return hace que el endpoint termine aca y el usuario solo reciba esta respuesta
+        }
+
         // Los placeholders ?, evitan inyecciones SQL para evitar ataques de este tipo
         let sql = "INSERT INTO products (name, image, category, price) VALUES (?, ?, ?, ?)";
 
         // Le enviamos estos valores a la BBDD
         let [rows] = await connection.query(sql, [name, image, category, price]);
+        console.log(rows);
 
         // Devolvemos una respuesta 201 "Created"
         res.status(201).json({
-            message: "Producto creado con exito"
+            message: "Producto creado con exito",
+            productId: rows.insertId
         });
 
 
