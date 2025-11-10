@@ -72,10 +72,10 @@
             let idProd = data.idProd; // Ahora ya tenemos guardado en una variable el valor del campo del formulario
             console.log(idProd);
 
-            console.log(`Realizando una peticion GET a la url ${url}/products/${idProd}`);
+            console.log(`Realizando una peticion GET a la url ${url}/api/products/${idProd}`);
             
             // Enviamos en una peticion GET el id pegado a la url
-            let response = await fetch(`${url}/products/${idProd}`);
+            let response = await fetch(`${url}/api/products/${idProd}`);
 
             let datos = await response.json();
             console.log(datos);
@@ -158,7 +158,7 @@
             console.log(data); // Ya tenemos como objetos JS los datos de nuestro formulario anterior con las nuevas modificaciones
 
             try {
-                let response = await fetch(`${url}/products`, {
+                let response = await fetch(`${url}/api/products`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"

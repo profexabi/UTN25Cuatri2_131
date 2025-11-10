@@ -34,8 +34,8 @@
     <main>
         <h1>Crear producto</h1>
         
-        <!-- Formulario que va a enviar nuestros datos al endpoint /products-->
-        <form action="/products" method="post" id="altaProducts-container">
+        <!-- Formulario que va a enviar nuestros datos al endpoint /api/products-->
+        <form id="altaProducts-container">
 
             <label for="nameProd">Nombre</label>
             <input type="text" name="name" id="nameProd" required>
@@ -89,7 +89,7 @@
             */
             try {
                 // En peticiones distintas a GET, tenemos que especificar mas informacion en un parametro de opciones
-                let response = await fetch(`${url}/products`, {
+                let response = await fetch(`${url}/api/products`, {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",

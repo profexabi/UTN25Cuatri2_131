@@ -18,6 +18,12 @@
 1. CRUD minimo para que funcione cuanto antes -> 1 endpoint, 2 vista
 2. Optimizaciones para ese CRUD
 3. Aplicar el modelo MVC
+
+    1. Desacoplar rutas
+    2. **HECHO** Desacoplar middlewares
+    3. Desacoplar controladores
+    4. Desacoplar modelos
+
 4. Servir archivos estaticos y plantillas con EJS
 5. EXTRAS del TP
 
