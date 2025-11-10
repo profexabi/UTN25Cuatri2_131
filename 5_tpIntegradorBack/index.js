@@ -10,6 +10,9 @@ const PORT = environments.port;
 
 import cors from "cors"; // Importamos el modulo CORS
 
+// Importamos los middlewares
+import { loggerUrl, validateId } from "./src/api/middlewares/middlewares.js"; 
+
 
 /*===================
     Middlewares
@@ -23,15 +26,8 @@ import cors from "cors"; // Importamos el modulo CORS
 app.use(cors()); // Middleware CORS basico que permite todas las solicitudes
 app.use(express.json()); // Middleware para parsear JSON en el body
 
-// Logger -> Vamos a registrar por consola cada peticion que se produjo
-app.use((req, res, next) => {
-    console.log(`[${new Date().toLocaleString()}]  ${req.method}  ${req.url}`);
-    // Si no llamamos a next, la conexion se queda trabada aca, next permite continuar procesando la operacion
-    next(); 
-});
+app.use(loggerUrl); // Aplicamos el middleware loggerUrl
 
-// Tendremos tambien middlewares de ruta -> se aplican a ciertas url
-// TO DO, crear middleware de ruta
 
 
 /*======================
@@ -102,12 +98,13 @@ app.get("/products", async (req, res) => {
 ////////////////
 // READ -> GET
 // Get product by id -> Consultar producto por su id
-app.get("/products/:id", async (req, res) => {
+app.get("/products/:id", validateId, async (req, res) => {
     try {
 
         // el :id se extrae con el objeto request -> req.params.id
         let { id } = req.params; // Esto nos permite obtener el valor numerico despues de products /products/2
 
+        /* Pasamos a definir el middleware validateId
         // Optimizacion 1: Validacion de parametros antes de acceder a la BBDD para evitar hacer una query si el id no es valido
         // Esta logica luego la hara un middleware validateId -> para EVITAR tener que repetir este codigo 
         if(!id || isNaN(Number(id))) {
@@ -115,7 +112,7 @@ app.get("/products/:id", async (req, res) => {
                 message: "El id del producto debe ser un numero valido"
             });
         }
-
+        */
         /* Si enviara este valor con post, lo recogeria asi:
         let { id } = req.body;
         */
@@ -207,6 +204,13 @@ app.put("/products", async (req, res) => {
       */
         let { id, name, image, category, price, active } = req.body;
 
+        // Optimizacion 1: Validacion basica de datos
+        if(!id || !name || !category || !price || !active) {
+            return res.status(400).json({
+                message: "Faltan campos requeridos"
+            });
+        }
+
         let sql = `
             UPDATE products
             SET name = ?, image = ?, price = ?, category = ?
@@ -215,6 +219,13 @@ app.put("/products", async (req, res) => {
 
         let [result] = await connection.query(sql, [name, image, price, category, id]);
         console.log(result);
+
+        // Optimizacion 2: Testeamos que se actualizara este producto
+        if(result.affectedRows === 0) {
+            return res.status(400).json({
+                message: "No se actualizo el producto"
+            });
+        }
 
         res.status(200).json({
             message: "Producto actualizado correctamente"
@@ -236,7 +247,7 @@ app.put("/products", async (req, res) => {
 ////////////////
 // DELETE -> DELETE
 // Eliminar producto
-app.delete("/products/:id", async (req, res) => {
+app.delete("/products/:id", validateId, async (req, res) => {
     try {
         let { id } = req.params;
 
@@ -249,6 +260,16 @@ app.delete("/products/:id", async (req, res) => {
         let [result] = await connection.query(sql, [id]);
         console.log(result);
         // affectedRows: 1 -> Nos indica que hubo una fila que fue afectada
+
+        // Optimizacion 1 -> Ya hacemos la validacion del Id a traves del middleware
+
+        // Optimizacion 2 -> Comprobar si realmente eliminamos un producto
+        if(result.affectedRows === 0) { // Quiere decir que no afectamos ninguna fila
+            return res.status(404).json({
+                message: `No se encontro un producto con id ${id}`
+            });
+        }
+
 
         return res.status(200).json({
             message: `Producto con id ${id} eliminado correctamente`

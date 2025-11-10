@@ -78,35 +78,60 @@
 
             let datos = await response.json();
 
-             // Extraemos de la respuesta payload, el primer resultado que contiene el objeto que consultamos
-            let producto = datos.payload[0];
-            console.log(producto);
+            if(response.ok) {
+                // Extraemos de la respuesta payload, el primer resultado que contiene el objeto que consultamos
+                let producto = datos.payload[0];
+                console.log(producto);
 
+                mostrarProducto(producto);
+    
+
+            } else {
+                console.log(datos);
+                console.log(datos.message);
+
+                mostrarError(datos.message);
+            }
+
+
+        });
+
+        function mostrarProducto(producto) {
             let htmlProducto = `
-                <li class="li-producto">
-                        <img class="producto-img" src="${producto.image}" alt="${producto.name}">
-                        <p>Id: ${producto.id} / Nombre: ${producto.name} / <strong>Precio: ${producto.price}</strong></p>
+                    <li class="li-producto">
+                            <img class="producto-img" src="${producto.image}" alt="${producto.name}">
+                            <p>Id: ${producto.id} / Nombre: ${producto.name} / <strong>Precio: ${producto.price}</strong></p>
+                    </li>
+                `;
+    
+            listaProductos.innerHTML = htmlProducto;
+        }
+
+
+        function mostrarError(message) {
+            listaProductos.innerHTML = `
+                <li class="mensaje-error">
+                    <p>
+                        <strong>Error:</strong>
+                        <span>${message}</span>
+                    </p>
                 </li>
             `;
-
-            listaProductos.innerHTML = htmlProducto;
-
-
-
-    
-/*==========================
-        Que es FormData?
-============================
-
-FormData es una interfaz nativa de JavaScript que permite crear un conjunto de pares clave-valor 
-que representan los campos de un formulario HTML y sus respectivos valores.
-
-Esta clase se utiliza principalmente para capturar y enviar datos de formularios, 
-ya sea mediante métodos como fetch o XMLHttpRequest, 
-y se encarga de formatear los datos correctamente como multipart/form-data, 
-estableciendo automáticamente los encabezados necesarios para el envío
-*/
-        });
+        }
+        
+        
+        /*==========================
+                Que es FormData?
+        ============================
+        
+        FormData es una interfaz nativa de JavaScript que permite crear un conjunto de pares clave-valor 
+        que representan los campos de un formulario HTML y sus respectivos valores.
+        
+        Esta clase se utiliza principalmente para capturar y enviar datos de formularios, 
+        ya sea mediante métodos como fetch o XMLHttpRequest, 
+        y se encarga de formatear los datos correctamente como multipart/form-data, 
+        estableciendo automáticamente los encabezados necesarios para el envío
+        */
     </script>
 </body>
 </html>
