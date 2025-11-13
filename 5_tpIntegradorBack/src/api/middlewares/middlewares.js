@@ -1,3 +1,12 @@
+/* Que son los middlewares?
+
+- Los middlewares son basicamente funciones que se ejecutan entre la peticion req y la respuesta res
+
+- La idea de los middlewares es no repetir instrucciones por cada endpoint
+
+- Estos son middlewares de aplicacion -> se aplican a todas las peticiones
+*/
+
 // Middleware de aplicacion -> Se aplica a todas las peticiones y respuestas
 // Middleware (de aplicacion) logger -> Vamos a registrar por consola cada peticion que se produjo
 const loggerUrl = (req, res, next) => {

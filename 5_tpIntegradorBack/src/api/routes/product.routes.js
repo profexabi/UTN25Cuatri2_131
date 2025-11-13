@@ -2,256 +2,39 @@
 import { Router } from "express";
 const router = Router(); // Lo mismo que const app = express();
 
-import connection from "../database/db.js"; // Importamos la conexion a la BBDD
 import { validateId } from "../middlewares/middlewares.js"; // Importamos el middleware
-
+import { createProduct, getAllProducts, getProductById, modifyProduct, removeProduct } from "../controllers/product.controllers.js";
 
 /* CRUD (Create Read Update Delete)
-
     - CREATE -> POST
     - READ -> GET
     - UPDATE -> PUT
-    - DELETE -> DELETE
-*/
+    - DELETE -> DELETE*/
 
 
 ////////////////
 // READ -> GET
-// Get products -> Traer todos los productos
-// Similiar al addEventListener, porque se ejecuta constantemente esperando una accion para ejecutar una fucion -> elemento.addEventListener("click", () => {})
-router.get("/", async (req, res) => { 
-    try {
-        
-        /* Ejemplo de consulta trayendo TODA la informacion de la BBDD
-
-        const sql = `SELECT * FROM products`;
-        const respuesta = await connection.query(sql);
-        
-        console.log(respuesta); // Aca trae no solo los resultados de la consulta sino tb mas info como metadatos
-
-        respuesta, ademas de los resultados de la consulta en forma de array de objetos, nos devuelve tambien el tipo de datos que trae
-          [
-            `id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-            `name` VARCHAR(100) NOT NULL,
-            `image` VARCHAR(255) NOT NULL,
-            `category` STRING(20) NOT NULL ENUM,
-            `price` DECIMAL(10,2) NOT NULL,
-            `active` TINYINT(1) NOT NULL
-        ]*/
-
-        // Optimizacion 1: Seleccionar solamente los campos necesarios -> name, image, category, price porque es la unica informacion que necesita ver el cliente
-        const sql = `SELECT * FROM products`;
-        const [rows] = await connection.query(sql);
-        
-        res.status(200).json({
-            payload: rows,
-            message: rows.length === 0 ? "No se encontraron productos" : "Productos encontrados"
-        });
-
-
-    } catch(error) {
-        // Este console.log muestra en la consola del servidor
-        console.error("Error al obtener productos", error);
-
-        // Esta es la respuesta que le devolvemos al cliente, para verla como JSON
-        res.status(500).json({
-            message: "Error interno al obtener productos"
-        });
-    }
-});
-
+router.get("/", getAllProducts);
 
 
 ////////////////
 // READ -> GET
-// Get product by id -> Consultar producto por su id
-router.get("/:id", validateId, async (req, res) => {
-    try {
-
-        // el :id se extrae con el objeto request -> req.params.id
-        let { id } = req.params; // Esto nos permite obtener el valor numerico despues de products //2
-
-        /* Pasamos a definir el middleware validateId
-        // Optimizacion 1: Validacion de parametros antes de acceder a la BBDD para evitar hacer una query si el id no es valido
-        // Esta logica luego la hara un middleware validateId -> para EVITAR tener que repetir este codigo 
-        if(!id || isNaN(Number(id))) {
-            return res.status(400).json({
-                message: "El id del producto debe ser un numero valido"
-            });
-        }
-        */
-        /* Si enviara este valor con post, lo recogeria asi:
-        let { id } = req.body;
-        */
-
-        // Los ? representan los placeholders, se usan por temas de seguridad para prevenir inyecciones SQL
-        let sql = `SELECT * FROM products where id = ?`;
-        const [rows] = await connection.query(sql, [id]); // El id reemplaza nuestro ?
-
-
-        // Hacemos la consulta, y tenemos el resultado en la variable rows
-        // Optimizacion 2: Comprobamos que existe el producto con ese id
-        if(rows.length === 0) {
-            console.log("Error, no existe producto con ese id");
-
-            return res.status(404).json({
-                message: `No se encontro producto con id ${id}`
-            });
-        }
-
-        res.status(200).json({
-            payload: rows
-        });
-
-
-    } catch (error) {
-        console.error("Error obteniendo producto con id", error.message);
-
-        res.status(500).json({
-            error: "Error interno al obtener un producto con id"
-        })
-    }
-});
+router.get("/:id", validateId, getProductById);
 
 
 ///////////////////
 // CREATE -> POST
-// Crear producto
-router.post("/", async (req, res) => {
-    try {
-        const { name, image, category, price } = req.body;
-        // Aca imprimimos lo que enviamos desde el form que previamente se parseo gracias al middleware -> express.json()
-        console.log(req.body); 
-
-        // Optimizacion 1: Validacion datos de entrada
-        if(!name || !image || !category || !price) {
-            return res.status(400).json({
-                message: "Datos invalidos, asegurate de enviar todos los campos del formulario"
-            });
-            // return hace que el endpoint termine aca y el usuario solo reciba esta respuesta
-        }
-
-        // Los placeholders ?, evitan inyecciones SQL para evitar ataques de este tipo
-        let sql = "INSERT INTO products (name, image, category, price) VALUES (?, ?, ?, ?)";
-
-        // Le enviamos estos valores a la BBDD
-        let [rows] = await connection.query(sql, [name, image, category, price]);
-        console.log(rows);
-
-        // Devolvemos una respuesta 201 "Created"
-        res.status(201).json({
-            message: "Producto creado con exito",
-            productId: rows.insertId
-        });
-
-
-    } catch (error) {
-        console.error("Error interno del servidor");
-
-        res.status(500).json({
-            message: "Error interno del servidor",
-            error: error.message
-        });
-    }
-});
+router.post("/", createProduct);
 
 
 ///////////////////
 // UPDATE -> PUT
-// Actualizar un producto
-router.put("/", async (req, res) => {
-    try {
-        /*
-        "id": 4,
-        "name": "hamburguesa pollo a la parrilla",
-        "image": "https://burgernj.com/wp-content/uploads/2021/05/Grilled-Chicken-Burger_.jpg",
-        "category": "food",
-        "price": "1500.00",
-        "active": 1
-      */
-        let { id, name, image, category, price, active } = req.body;
-
-        // Optimizacion 1: Validacion basica de datos
-        if(!id || !name || !category || !price || !active) {
-            return res.status(400).json({
-                message: "Faltan campos requeridos"
-            });
-        }
-
-        let sql = `
-            UPDATE products
-            SET name = ?, image = ?, price = ?, category = ?
-            WHERE id = ?
-        `;
-
-        let [result] = await connection.query(sql, [name, image, price, category, id]);
-        console.log(result);
-
-        // Optimizacion 2: Testeamos que se actualizara este producto
-        if(result.affectedRows === 0) {
-            return res.status(400).json({
-                message: "No se actualizo el producto"
-            });
-        }
-
-        res.status(200).json({
-            message: "Producto actualizado correctamente"
-        });
-        
-
-    } catch (error) {
-        console.error("Error al actualizar el producto: ", error);
-
-        res.status(500).json({
-            message: "Error interno del servidor",
-            error: error.message
-        })
-    }
-});
-
+router.put("/", modifyProduct);
 
 
 ////////////////
 // DELETE -> DELETE
-// Eliminar producto
-router.delete("/:id", validateId, async (req, res) => {
-    try {
-        let { id } = req.params;
-
-        // Opcion 1: Borrado normal
-        let sql = "DELETE FROM products WHERE id = ?";
-
-        // Opcion 2: Baja logica
-        // let sql2 = "UPDATE products set active = 0 WHERE id = ?";
-
-        let [result] = await connection.query(sql, [id]);
-        console.log(result);
-        // affectedRows: 1 -> Nos indica que hubo una fila que fue afectada
-
-        // Optimizacion 1 -> Ya hacemos la validacion del Id a traves del middleware
-
-        // Optimizacion 2 -> Comprobar si realmente eliminamos un producto
-        if(result.affectedRows === 0) { // Quiere decir que no afectamos ninguna fila
-            return res.status(404).json({
-                message: `No se encontro un producto con id ${id}`
-            });
-        }
-
-
-        return res.status(200).json({
-            message: `Producto con id ${id} eliminado correctamente`
-        });
-
-
-    } catch (error) {
-        console.log(`Error al eliminar un producto con id ${id}: `, error);
-
-        res.status(500).json({
-            message: `Error al eliminar un producto con id ${id}`,
-            error: error.message
-        })
-    }
-});
+router.delete("/:id", validateId, removeProduct);
 
 
 // Exportamos todas las rutas

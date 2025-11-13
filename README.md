@@ -13,6 +13,36 @@
 
 ---
 
+## Resumen de [Modelo Vista Controlador](https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador)
+
+1. El `index.js` registra una peticion a `"/api/products"` y redirige a `productRoutes`
+```js
+// index.js
+app.use("/api/products", productRoutes); 
+```
+
+2. La ruta registra una peticion get con un id `"/:id`, aplica el middleware `validateId` y redirige al controlador `getProductById`
+```js
+// product.routes.js
+router.get("/:id", validateId, getProductById);
+```
+
+3. El controlador recibe una peticion y solicita al modelo `productModels` esa informacion
+```js
+// product.controllers.js
+let [result] = await ProductModels.deleteProduct(id);
+```
+
+4. Finalmente, el modelo hace la consulta a la BBDD y le devuelve la solicitud al controlador
+```js
+// product.models.js
+let sql = `SELECT * FROM products where id = ?`;
+return connection.query(sql, [id]); // El id reemplaza nuestro ?
+```
+
+
+---
+
 ## Anotaciones
 ### Guia para resolver el backend
 1. CRUD minimo para que funcione cuanto antes -> 1 endpoint, 2 vista
