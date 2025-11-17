@@ -40,8 +40,14 @@ let sql = `SELECT * FROM products where id = ?`;
 return connection.query(sql, [id]); // El id reemplaza nuestro ?
 ```
 
+---
+
+
+## Resumen de [EJS](https://www.npmjs.com/package/ejs)
+![Muestra EJS](ejs.png)
 
 ---
+
 
 ## Anotaciones
 ### Guia para resolver el backend
