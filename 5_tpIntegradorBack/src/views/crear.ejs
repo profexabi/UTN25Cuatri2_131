@@ -1,0 +1,33 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/nav.ejs") %>
+
+<main>
+    
+    <!-- Formulario que va a enviar nuestros datos al endpoint /api/products-->
+    <form id="altaProducts-container">
+
+        <label for="nameProd">Nombre</label>
+        <input type="text" name="name" id="nameProd" required>
+
+        <label for="imageProd">Imagen</label>
+        <input type="text" name="image" id="imageProd" required>
+
+        <label for="priceProd">Precio</label>
+        <input type="number" name="price" id="priceProd" required>
+
+        <label for="categoryProd">Categoria</label>
+        <select name="category" id="categoryProd" required>
+            <option value="food">comida</option>
+            <option value="drink">bebida</option>
+        </select>
+
+        <input type="submit" value="Crear producto">
+    </form>
+
+    <hr>
+    <section id="contenedor-productos"></section>
+</main>
+
+<script src="js/crear.js"></script>
+
+<%- include("partials/footer.ejs") %>

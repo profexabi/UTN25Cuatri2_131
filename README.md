@@ -13,6 +13,81 @@
 
 ---
 
+## Resumen Login
+
+1. Instalamos [express-session](https://www.npmjs.com/package/express-session)
+    ```sh
+    npm i express-session
+    ```
+    - `express-session` es un middleware que permite que Express recuerde datos entre peticiones, para saber si estamos logueados
+    - Como el protocolo HTTP no recuerda quienes somos, cuando iniciemos sesion guardaremos algo asi
+    ```js
+    req.session.user = { id: 12, name: "Kevin" }
+    ```
+    - Sin sesiones no hay forma de saber si el usuario esta logueado
+
+2. Usaremos un [generador de claves para sesion](https://secretkeygen.vercel.app/)
+    - Sin una claave privada que Express usa para firmar la cookie de sesion, evitamos que alguien falsifique la sesion, la modifique o robe una identidad
+
+    - Guardamos esta clave en el .env, esto nos permite que Express cree una cookie segura
+    ```
+    SESSION_SECRET="3cad74cc75e25ac4c13601993d30c890"
+    ```
+
+3. Traemos esta clave secreta al archivo de `environments.js`
+
+    ```js
+    session_key: process.env.SESSION_SECRET,
+    ```
+
+4. Ahora en el `index.js` traemos todo y creamos el middleware de sesion
+    ```js
+    const session_key = environments.session_key; // Traemos la session_key
+
+    import session from "express-session"; // Importamos express-session
+
+    // Middleware de sesion 
+    app.use(session({
+        secret: session_key, // Esto firma las cookies para evitar manipulacion
+        resave: false, // Esto evita guardar la sesion si no hubo cambios
+        saveUninitialized: true // No guarde sesiones vacias
+    }));
+    ```
+
+5. Ahora crearemos la vista de login.ejs
+
+6. Creamos el endpoint `/login` para recibir los datos que le mande el `<form>` de login.ejs
+
+
+---
+
+
+### Entendiendo el middleware de sesion
+1. **app.use(session({}))**
+    - Es el middleware de Express que se ejecuta en todas las rutas de la aplicacion. Aca la usamos para aplicar el middleware `express-session` a la aplicacion.
+    - Esto significa que cada vez que un usuario hace una solicitud HTTP, se gestionara su sesion mediante este middleware
+
+2. **secret: session_key**
+    - secret es una opcion clave en la config de express-session. Porque es una clave secreta que utilizamos para firmar la sesion, asegurando que los datos no sean modificados por el cliente. Es esencial para la seguridad de la aplicacion
+    - El valor `de session_key` debe ser una cadena de caracteres aleatoria y secreta (nunca deberia ser algo predecible). Este valor lo utilizaremos para FIRMAR las cookies de sesion, de modo que el servidor puheda verificar que los datos no fueron alterados por el cliente
+    - Si no proporcionamos un secret, la sesion seria vulnerable a ataques de modificacion de datos
+
+3. **resave: false**
+    - Esta opcion determina si la sesion debe guardarse de nuevo en el almacenamiento de la sesion cada vez que se realice una solicitud, incluso si no se modifico
+    - Si se establece en false, solo guarda la sesion si hubo algun cambio en los datos de la sesion
+    - Si se estable en true, la sesion se guarda de nuevo en cada solicitud, incluso si no hay cambios, lo cual es un gasto innecesario de recursos, mucho mejor false
+
+4. **saveUnitialized: true**
+    - Esta opcion controla si las sesiones no inicializadas (sesiones que no tienen datos) se deben guardar
+    - Si se establece en true, se guarda la sesion incluso si no tiene datos (en el caso de un usuario recien llegado)
+    - Si se establece en false, las sesiones vacias no se almacenan. Esto puede ser util para evitar el almacenamiento innecesario de sesiones para usuarios que no interactuan con la aplicacion de manera significativa
+    - En general, se recomienda establecerlo en true para garantizar que la sesion se cree desde el inicio, porque muchos sistemas requieren que haya un identificador de sesion presente aunque este vacio 
+
+
+
+
+---
+
 ## Resumen de [Modelo Vista Controlador](https://es.wikipedia.org/wiki/Modelo%E2%80%93vista%E2%80%93controlador)
 
 1. El `index.js` registra una peticion a `"/api/products"` y redirige a `productRoutes`

@@ -3,86 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tp Integrador Front</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel='stylesheet' href='https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.css'>
-    
+    <title>Totem tienda</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <a href="index.html">
-                    <li>Ver</li>
-                </a>
-                <a href="consultar.html">
-                    <li>Consultar id</li>
-                </a>
-                <a href="crear.html">
-                    <li>Crear</li>
-                </a>
-                <a href="modificar.html">
-                    <li>Modificar</li>
-                </a>
-                <a href="eliminar.html">
-                    <li>Eliminar</li>
-                </a>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <h1>Listado productos</h1>
-        <hr>
-        <section id="contenedor-productos"></section>
-    </main>
-
-    <script>
-    let contenedorProductos = document.getElementById("contenedor-productos");
-    let url = "http://localhost:3000";
-
-    async function obtenerProductos() {
-        try {
-            let response = await fetch(`${url}/api/products`);
-            console.log(response);
-
-            console.log(`Solicitud fetch GET a ${url}/api/products`);
-
-            let data = await response.json();
-            console.log(data);
-            
-            let productos = data.payload;
-            console.log(productos);
-
-            mostrarProductos(productos);
-
-        } catch (error) {
-            console.error("Error obteniendo productos: ", error);
-        }
-    }
-
-
-    function mostrarProductos(array) {
-        let htmlProductos = "";
-
-        array.forEach(prod => {
-            htmlProductos += `
-                <div class="card-producto">
-                    <img class="producto-img" src="${prod.image}" alt="${prod.name}">
-                    <h3>${prod.name}</h3>
-                    <p>Id: ${prod.id}</p>
-                    <p>$${prod.price}</p>
-                </div>
-            `;
-        });
-
-        contenedorProductos.innerHTML = htmlProductos;
-    }
-
-    function init() {
-        obtenerProductos();
-    }
-
-    init();
-    </script>
+    
 </body>
 </html>

@@ -6,6 +6,7 @@ const app = express(); // Inicializamos express en la variable app, que contendr
 
 import environments from "./src/api/config/environments.js"; // Importamos las variables de entorno
 const PORT = environments.port;
+const session_key = environments.session_key;
 
 import cors from "cors"; // Importamos el modulo CORS
 
@@ -13,11 +14,12 @@ import cors from "cors"; // Importamos el modulo CORS
 import { loggerUrl } from "./src/api/middlewares/middlewares.js"; 
 
 // Importamos las rutas de producto
-import { productRoutes } from "./src/api/routes/index.js";
+import { productRoutes, viewRoutes } from "./src/api/routes/index.js";
 
 // Incorporamos la configuracion en el index.js
 import { __dirname, join } from "./src/api/utils/index.js";
-import connection from "./src/api/database/db.js";
+
+import session from "express-session";
 
 
 /*===================
@@ -40,33 +42,31 @@ app.use(express.static(join(__dirname, "src/public"))); // Nuestros archivos est
 app.set("view engine", "ejs");
 app.set("views", join(__dirname, "src/views")); // Nuestras vistas se serviran desde la carpeta public
 
+// Middleware de sesion 
+app.use(session({
+    secret: session_key, // Esto firma las cookies para evitar manipulacion
+    resave: false, // Esto evita guardar la sesion si no hubo cambios
+    saveUninitialized: true // No guarde sesiones vacias
+}));
 
+
+/* TO DO: 
+    1. Crear la vista del login con un <form> que manda los datos a un
+    2. Endpoint /login que recibe estos datos y redireciona
+    3. Integrar las redirecciones en view.routes.js
+    4. Añadiremos el boton en el <nav> para poder hacer una solicitud al
+    5. Endpoint /logout para salir del login
+
+*/
 
 /*======================
     Rutas
 ======================*/
-// Gracias al middleware Router, todas las peticiones (get, post, put, delete) directamente van al modulo productRoutes que se encargan de manejarlas
+// Rutas producto
 app.use("/api/products", productRoutes);
 
-// TO DO -> Crear vista TP Integrador y terminar vistas EJS
-
-// TODO -> Modularizar despues!
-app.get("/dashboard", async (req, res) => {
-    try {
-        const [rows] = await connection.query("SELECT * FROM products");
-        console.log(rows);
-
-        res.render("index", {
-            title: "Dashboard",
-            about:"Listado principal",
-            productos: rows
-        });
-
-    } catch (error) {
-        console.error(error);
-    }
-});
-
+// Rutas vista
+app.use("/", viewRoutes);
 
 
 app.listen(PORT, () => {
