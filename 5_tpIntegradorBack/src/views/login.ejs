@@ -1,0 +1,37 @@
+<%- include("partials/head.ejs") %>
+
+<h1>Login dashboard</h1>
+
+<!-- Haremos el envio de datos desde el <form> de HTML, sin fetch!
+Esto nos implicara tener que parsear datos no JSON, crearemos un nuevo middleware
+
+// Middleware para parsear las solicitudes POST que enviamos desde el <form> HTML
+app.use(express.urlencoded({ extended: true }));
+-->
+<form action="/login" method="POST" autocomplete="off" id="login-form">
+
+    <label for="emailUser">Email</label>
+    <input type="email" name="email" id="emailUser" required>
+
+    <label for="passwordUser">Password</label>
+    <input type="password" name="password" id="passwordUser" required>
+
+    <input type="submit" value="Login">
+    <input type="button" id="acceso-rapido" value="Acceso rapido">
+</form>
+
+
+<script>
+    // Funcionalidad boton acceso rapido
+    let emailUser = document.getElementById("emailUser");
+    let passwordUser = document.getElementById("passwordUser");
+
+    let acceso_rapido = document.getElementById("acceso-rapido");
+
+    acceso_rapido.addEventListener("click", () => {
+        emailUser.value = "test@test.com";
+        passwordUser.value = "test"
+    });
+</script>
+
+<%- include("partials/footer.ejs") %>

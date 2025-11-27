@@ -1,9 +1,9 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/nav.ejs") %>
 
-<main>
+<main id="alta-container">
     
-    <!-- Formulario que va a enviar nuestros datos al endpoint /api/products-->
+    <!-- Formulario para crear productos y enviarlos a /api/products -->
     <form id="altaProducts-container">
 
         <label for="nameProd">Nombre</label>
@@ -26,6 +26,20 @@
 
     <hr>
     <section id="contenedor-productos"></section>
+
+    <!-- Formulario para crear usuarios y enviarlos a /api/users -->
+    <form id="altaUsers-container">
+        <label for="nombreUser">Nombre</label>
+        <input type="text" name="name" id="nombreUser" required>
+
+        <label for="emailUser">Email</label>
+        <input type="email" name="email" id="emailUser" required>
+
+        <label for="passwordUser">Password</label>
+        <input type="password" name="password" id="passwordUser" required>
+
+        <input type="submit" value="Crear usuario">
+    </form>
 </main>
 
 <script src="js/crear.js"></script>

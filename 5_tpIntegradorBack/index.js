@@ -14,7 +14,7 @@ import cors from "cors"; // Importamos el modulo CORS
 import { loggerUrl } from "./src/api/middlewares/middlewares.js"; 
 
 // Importamos las rutas de producto
-import { productRoutes, viewRoutes } from "./src/api/routes/index.js";
+import { productRoutes, userRoutes, viewRoutes } from "./src/api/routes/index.js";
 
 // Incorporamos la configuracion en el index.js
 import { __dirname, join } from "./src/api/utils/index.js";
@@ -26,7 +26,12 @@ import session from "express-session";
     Middlewares
 ====================*/
 app.use(cors()); // Middleware CORS basico que permite todas las solicitudes
-app.use(express.json()); // Middleware para parsear JSON en el body
+
+// Middleware para parsear las solicitudes POST y PUT que envian JSON en el body
+app.use(express.json());
+
+// Middleware para parsear las solicitudes POST que enviamos desde el <form> HTML
+app.use(express.urlencoded({ extended: true }));
 
 app.use(loggerUrl); // Aplicamos el middleware loggerUrl
 
@@ -67,6 +72,9 @@ app.use("/api/products", productRoutes);
 
 // Rutas vista
 app.use("/", viewRoutes);
+
+// Rutas usuario
+app.use("/api/users", userRoutes);
 
 
 app.listen(PORT, () => {

@@ -41,5 +41,13 @@ router.get("/eliminar", (req, res) => {
     })
 });
 
+
+// Vista Login
+router.get("/login", (req, res) => {
+    res.render("login", {
+        title: "Login"
+    });
+})
+
 // Exportamos las rutas de las vistas
 export default router;

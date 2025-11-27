@@ -67,3 +67,9 @@ li {
     padding: 5px 30px;
     border-radius: 4px;
 }
+
+
+#alta-container {
+    display: flex;
+    align-items: end;
+}
