@@ -3,9 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Totem tienda</title>
+    <title>Llama Autoservicio</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mynerve&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
 </head>
-<body>
+<body class="pagina-bienvenida">
+    <header class="header-bienvenida">
+        <img src="img/llama logo(1).png" class="logo-img" alt="logo llama">
+        <h2>Llama Autoservicio</h2>
+    </header>
+
+    <main class="main-bienvenida">
     
+        <h1>Bienvenidx!</h1>
+
+        <h4>Introducí tu nombre</h4>
+        <form id="form-bienvenida">
+            <input type="text" id="bienvenida-nombre">
+            <input class="btn-enviar" type="submit" value="Enviar">
+        </form>
+
+    </main>
+
+    <script>
+        // Formulario bienvenida
+        let formBienvenida = document.getElementById("form-bienvenida");
+        formBienvenida.addEventListener("submit", event => {
+            event.preventDefault();
+
+            let nombreUsuario = document.getElementById("bienvenida-nombre").value;
+
+            if(nombreUsuario.length > 0) {
+                sessionStorage.setItem("nombreUsuario", nombreUsuario);
+                window.location.href = "productos.html";
+            }
+        })
+    </script>
 </body>
 </html>

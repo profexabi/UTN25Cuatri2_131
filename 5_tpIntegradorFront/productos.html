@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Llama totem</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mynerve&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <script defer src="js/main.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="img/llama logo(1).png" class="logo-img" alt="logo llama">
+        </div>
+        <!-- Navbar -->
+        <nav class="navbar">
+            <div class="logo">
+                <a href="" class="mynerve-regular">Llama Autoservicio</a>
+            </div>
+    
+            <input type="text" placeholder="Buscar..." class="search-bar">
+    
+            <div class="cart">
+                <span>Carrito: <span id="cart-count">0</span> productos</span>
+            </div>
+        </nav>
+
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <section class="products-section">
+            <div id="products-welcome">
+                <h2 id="saludo-usuario"></h2>
+                <h2>Te "llama" nuestra comida?</h2>
+            </div>
+            <div class="product-grid"></div>
+        </section>
+
+
+        <!-- Cart Section -->
+        <section class="cart-section">
+            <h2>Carrito</h2>
+
+            <ul id="cart-items">
+                <p class="info-carrito">No hay productos en el carrito.</p>
+            </ul>
+
+            <div class="cart-total">
+                <p>Total: <span id="total-price">$0.00</span></p>
+                <div class="cart-buttons">
+	                <button class="hidden delete-button" id="empty-cart" onclick="vaciarCarrito()">Vaciar Carrito</button>
+                    <button class="hidden orange-btn" id="btn-imprimir">Imprimir ticket</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
