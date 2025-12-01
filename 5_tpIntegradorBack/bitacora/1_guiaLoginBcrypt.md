@@ -20,17 +20,17 @@ HTTP es un protocolo sin estado (stateless), lo que significa que cada solicitud
     - Sin sesiones no hay forma de saber si el usuario esta logueado
 
 2. Usaremos un [generador de claves para sesion](https://secretkeygen.vercel.app/)
-    - Sin una claave privada que Express usa para firmar la cookie de sesion, evitamos que alguien falsifique la sesion, la modifique o robe una identidad
+    - Sin una clave privada que Express usa para firmar la cookie de sesion, evitamos que alguien falsifique la sesion, la modifique o robe una identidad
 
     - Guardamos esta clave en el .env, esto nos permite que Express cree una cookie segura
     ```
-    SESSION_SECRET="3cad74cc75e25ac4c13601993d30c890"
+    SESSION_KEY="3cad74cc75e25ac4c13601993d30c890"
     ```
 
 3. Traemos esta clave secreta al archivo de `environments.js`
 
     ```js
-    session_key: process.env.SESSION_SECRET,
+    session_key: process.env.SESSION_KEY,
     ```
 
 4. Ahora en el `index.js` traemos todo y creamos el middleware de sesion
